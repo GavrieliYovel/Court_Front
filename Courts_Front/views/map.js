@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import {useState, useEffect} from "react";
-import { StyleSheet, Text, View } from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import * as Location from 'expo-location';
 import {Marker} from "react-native-maps";
@@ -50,16 +50,19 @@ export const Map = () => {
             showsUserLocation={true}>
             {  courts ? courts.map((courts, index) => (
                 <Marker
-
                     coordinate={{
-
                         latitude: courts.location.LAT,
                         longitude: courts.location.LON
                     }}
                     title={courts.name}
-                    description={courts.scope}
+                    description={courts.scope.join(' ')}
                     // onPress={onPinPress}
-                />
+                >
+                    <Image
+                        style={styles.imageSize}
+                        source={require('../assets/court.png')}
+                    />
+                </Marker>
             )):[]}
         </MapView>
     );
@@ -72,6 +75,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    imageSize: {
+        width:35,
+        height:35
+
+    }
 });
 
 
