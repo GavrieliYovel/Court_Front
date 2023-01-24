@@ -19,6 +19,7 @@ export default function Navbar() {
             <Drawer.Navigator
                 drawerType="front"
                 initialRouteName="Profile"
+                useLegacyImplementation
                 screenOptionsw={{
                     activeTintColor: '#e91e63',
                     itemStyle: { marginVertical: 10 },
