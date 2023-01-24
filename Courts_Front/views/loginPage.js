@@ -28,11 +28,26 @@ const styles = StyleSheet.create({
         marginBottom: 25,
     }
 });
+
 export const LoginScreen = () => {
     const [email, onChangeEmail] = React.useState('');
     const [password, onChangePassword] = React.useState('');
     const onPressLogin = () => {
-
+        console.log('clicked');
+        fetch('https://courts.onrender.com/users/login', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email.toLowerCase(),
+                password: password
+            })
+        })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(e => console.log('login fail'))
     }
     return (
         <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
