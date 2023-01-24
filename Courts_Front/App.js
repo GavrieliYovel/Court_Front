@@ -4,13 +4,11 @@ import Navbar from "./Components/Navbar";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Hello Pe'er</Text>
-      <StatusBar style="auto" />
-    </View>
-     // <Navbar/>
-
-
+    // <View style={styles.container}>
+    //   <Text>Hello Pe'er</Text>
+    //   <StatusBar style="auto" />
+    // </View>
+     <Navbar/>
   );
 }
 
