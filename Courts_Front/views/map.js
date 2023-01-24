@@ -1,14 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
 import {useState, useEffect} from "react";
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View, Modal, TouchableOpacity, Dimensions, Card} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import * as Location from 'expo-location';
 import {Marker} from "react-native-maps";
-
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 export const Map = () => {
     const [courts, setCourts] = useState([]);
     const [location, setLocation] = useState({});
+    const [modalVisible, setModalVisible] = useState(false);
+    const [markerData, setMarkerData] = useState({});
+
     const getCourtPins = () => {
         fetch("https://courts.onrender.com/courts")
             .then(response => response.json())
@@ -50,18 +54,43 @@ export const Map = () => {
             showsUserLocation={true}>
             {  courts ? courts.map((courts, index) => (
                 <Marker
+                    key={courts._id}
                     coordinate={{
                         latitude: courts.location.LAT,
                         longitude: courts.location.LON
                     }}
                     title={courts.name}
-                    description={courts.scope.join(' ')}
-                    // onPress={onPinPress}
+                    description={courts.scope.join(', ')}
+                    onPress={() => {
+                        setMarkerData(courts);
+                        setModalVisible(true);
+                    }}
                 >
                     <Image
                         style={styles.imageSize}
                         source={require('../assets/court.png')}
                     />
+                    <Modal
+                        style={{
+                            width: '100%',
+                            height: screenHeight * 0.5,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                        animationType="slide"
+                        transparent={false}
+                        visible={modalVisible}
+                        onRequestClose={() => setModalVisible(false)}
+                    >
+                        <View style={styles.modalContainer}>
+                            <Text>Court Name: {markerData.name}</Text>
+                            <Text>City: {markerData.city}</Text>
+                            {/*<Text>Scope: {markerData.scope.join(" ")}</Text>*/}
+                            <TouchableOpacity onPress={() => setModalVisible(false)}>
+                                <Text>Close</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Modal>
                 </Marker>
             )):[]}
         </MapView>
@@ -79,6 +108,15 @@ const styles = StyleSheet.create({
         width:35,
         height:35
 
+    },
+    modalContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 10,
+        elevation: 5,
     }
 });
 
