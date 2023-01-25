@@ -1,65 +1,84 @@
-import * as React from 'react';
-import { View, Text, Button } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import {
-    createDrawerNavigator,
-    DrawerContentScrollView,
-    DrawerItemList,
-    DrawerItem,
-} from '@react-navigation/drawer';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {NavigationContainer} from '@react-navigation/native';
+import {Ionicons, FontAwesome5, FontAwesome, AntDesign } from "@expo/vector-icons";
+import {View, Text} from "react-native";
+import Header from "./Header";
+const iconMap = {
+    Map: (focused, color)=>{
+        return(
+         <FontAwesome5 name="map-marker-alt" size={24} color={focused ? "black": "grey"} />
+    )
+    },
+    Games: (focused, color)=>{
+        return(
+            <FontAwesome name="soccer-ball-o" size={24} color={focused ? "black": "grey"} />
+        )
+    },
+    Teams: (focused, color)=>{
+        return (
+            <AntDesign name="team" size={24} color={focused ? "black": "grey"} />
+    )
+    },
 
-function Feed({ navigation }) {
+}
+const Tab = createBottomTabNavigator();
+const MapScreen = () => {
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Feed Screen</Text>
-            <Button title="Open drawer" onPress={() => navigation.openDrawer()} />
-            <Button title="Toggle drawer" onPress={() => navigation.toggleDrawer()} />
+        <View>
+            <Text>Home Screen</Text>
         </View>
-    );
+    )
 }
-
-function Notifications() {
+const GamesScreen = () => {
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Notifications Screen</Text>
+        <View>
+            <Text>Games Screen</Text>
         </View>
-    );
+    )
+}
+const TeamsScreen = () => {
+    return (
+        <View>
+            <Text>Teams Screen</Text>
+        </View>
+    )
 }
 
-function CustomDrawerContent(props) {
-    return (
-        <DrawerContentScrollView {...props}>
-            <DrawerItemList {...props} />
-            <DrawerItem
-                label="Close drawer"
-                onPress={() => props.navigation.closeDrawer()}
-            />
-            <DrawerItem
-                label="Toggle drawer"
-                onPress={() => props.navigation.toggleDrawer()}
-            />
-        </DrawerContentScrollView>
-    );
-}
-
-const Drawer = createDrawerNavigator();
-
-function MyDrawer() {
-    return (
-        <Drawer.Navigator
-            useLegacyImplementation
-            drawerContent={(props) => <CustomDrawerContent {...props} />}
-        >
-            <Drawer.Screen name="Feed" component={Feed} />
-            <Drawer.Screen name="Notifications" component={Notifications} />
-        </Drawer.Navigator>
-    );
+MapScreen.navigationOptions = ({navigation}) =>{
+    return {
+        header: () => <Header user={navigation.getParam('user')} />
+    }
 }
 
 export default function Navbar() {
     return (
         <NavigationContainer>
-            <MyDrawer />
+            <Tab.Navigator
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ focused, color, size }) => {
+                        console.log(focused, color )
+                        return iconMap[route.name](focused, color);
+                        //
+                        // if (route.name === 'Map') {
+                        //     iconName = focused
+                        //         ? 'ios-information-circle'
+                        //         : 'ios-information-circle-outline';
+                        // } else if (route.name === 'Settings') {
+                        //     iconName = focused ? 'ios-list' : 'ios-list-outline';
+                        // }
+
+                        // You can return any component that you like here!
+                    },
+                    tabBarActiveTintColor: 'black',
+                    tabBarInactiveTintColor: 'grey',
+                })}
+            >
+                <Tab.Screen
+                    name="Map" component={MapScreen}/>
+
+                <Tab.Screen name="Games" component={GamesScreen}/>
+                <Tab.Screen name="Teams" component={TeamsScreen}/>
+            </Tab.Navigator>
         </NavigationContainer>
     );
 }
