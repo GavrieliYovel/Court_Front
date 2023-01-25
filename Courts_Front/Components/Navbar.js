@@ -2,7 +2,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {Ionicons, FontAwesome5, FontAwesome, AntDesign } from "@expo/vector-icons";
 import {View, Text} from "react-native";
-import Header from "./Header";
+import {User, CourtsLogo, HeaderButtons} from "./Header";
 const iconMap = {
     Map: (focused, color)=>{
         return(
@@ -44,11 +44,7 @@ const TeamsScreen = () => {
     )
 }
 
-MapScreen.navigationOptions = ({navigation}) =>{
-    return {
-        header: () => <Header user={navigation.getParam('user')} />
-    }
-}
+
 
 export default function Navbar() {
     return (
@@ -56,7 +52,6 @@ export default function Navbar() {
             <Tab.Navigator
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
-                        console.log(focused, color )
                         return iconMap[route.name](focused, color);
                         //
                         // if (route.name === 'Map') {
@@ -73,9 +68,14 @@ export default function Navbar() {
                     tabBarInactiveTintColor: 'grey',
                 })}
             >
-                <Tab.Screen
-                    name="Map" component={MapScreen}/>
+                <Tab.Screen name="Map" component={MapScreen} options={{
+                    headerTitle : (props) => <CourtsLogo/>,
+                    headerLeft : (props) =>  <User/>,
+                    headerRight: (props) => <HeaderButtons/>,
+                    headerStyle:{ height: 100, justifyContent: 'center' },
 
+                    headerTitleStyle: { fontWeight: 'bold', alignSelf: 'center', textAlign: 'center', justifyContent: 'center' }
+                }}/>
                 <Tab.Screen name="Games" component={GamesScreen}/>
                 <Tab.Screen name="Teams" component={TeamsScreen}/>
             </Tab.Navigator>
