@@ -4,8 +4,10 @@ import {Image, StyleSheet, Text, View, Modal, TouchableOpacity, Dimensions, Card
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import * as Location from 'expo-location';
 import {Marker} from "react-native-maps";
+import MapViewDirections from "react-native-maps-directions";
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
+import {CourtModal, courtModal} from '../components/courtModal';
 
 export const Map = () => {
     const [courts, setCourts] = useState([]);
@@ -34,11 +36,12 @@ export const Map = () => {
                 let position = await Location.getCurrentPositionAsync({});
                 setLocation(position);
                 console.log("found")
+                await getCourtPins()
             } catch (error) {
                 console.log(error);
             }
         })();
-        getCourtPins()
+
     }, []);
 
     return (
@@ -54,13 +57,13 @@ export const Map = () => {
             showsUserLocation={true}>
             {  courts ? courts.map((courts, index) => (
                 <Marker
-                    key={courts._id}
+                    key={courts?._id}
                     coordinate={{
-                        latitude: courts.location.LAT,
-                        longitude: courts.location.LON
+                        latitude: courts?.location.LAT,
+                        longitude: courts?.location.LON
                     }}
                     title={courts.name}
-                    description={courts.scope.join(', ')}
+                    description={courts?.scope.join(', ')}
                     onPress={() => {
                         setMarkerData(courts);
                         setModalVisible(true);
@@ -70,27 +73,11 @@ export const Map = () => {
                         style={styles.imageSize}
                         source={require('../assets/court.png')}
                     />
-                    <Modal
-                        style={{
-                            width: '100%',
-                            height: screenHeight * 0.5,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                        animationType="slide"
-                        transparent={false}
-                        visible={modalVisible}
-                        onRequestClose={() => setModalVisible(false)}
-                    >
-                        <View style={styles.modalContainer}>
-                            <Text>Court Name: {markerData.name}</Text>
-                            <Text>City: {markerData.city}</Text>
-                            {/*<Text>Scope: {markerData.scope.join(" ")}</Text>*/}
-                            <TouchableOpacity onPress={() => setModalVisible(false)}>
-                                <Text>Close</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </Modal>
+                    <CourtModal
+                        modalVisible={modalVisible}
+                        markerData={markerData}
+                        onClose={() => setModalVisible(false)}
+                    />
                 </Marker>
             )):[]}
         </MapView>
@@ -120,6 +107,20 @@ const styles = StyleSheet.create({
     }
 });
 
-
+// <Modal
+//     animationType="slide"
+//     transparent={false}
+//     visible={modalVisible}
+//     onRequestClose={() => setModalVisible(false)}
+// >
+//     <View style={styles?.modalContainer}>
+//         <Text>Court Name: {markerData?.name}</Text>
+//         <Text>City: {markerData?.city}</Text>
+//         <Text>Scope: {markerData?.scope?.join(" ")}</Text>
+//         <TouchableOpacity onPress={() => setModalVisible(false)}>
+//             <Text>Close</Text>
+//         </TouchableOpacity>
+//     </View>
+// </Modal>
 
 
