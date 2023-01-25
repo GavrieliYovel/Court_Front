@@ -3,6 +3,15 @@ import {NavigationContainer} from '@react-navigation/native';
 import {Ionicons, FontAwesome5, FontAwesome, AntDesign } from "@expo/vector-icons";
 import {View, Text} from "react-native";
 import {User, CourtsLogo, HeaderButtons} from "./Header";
+
+import TeamsListScreen from "./TeamsListScreen";
+const HeaderOptions = {
+    headerTitle : (props) => <CourtsLogo/>,
+    headerLeft : (props) =>  <User/>,
+    headerRight: (props) => <HeaderButtons/>,
+    headerStyle:{ height: 100 },
+    headerTitleStyle: { fontWeight: 'bold', alignSelf: 'center', textAlign: 'center', justifyContent: 'center' }
+}
 const iconMap = {
     Map: (focused, color)=>{
         return(
@@ -68,16 +77,9 @@ export default function Navbar() {
                     tabBarInactiveTintColor: 'grey',
                 })}
             >
-                <Tab.Screen name="Map" component={MapScreen} options={{
-                    headerTitle : (props) => <CourtsLogo/>,
-                    headerLeft : (props) =>  <User/>,
-                    headerRight: (props) => <HeaderButtons/>,
-                    headerStyle:{ height: 100, justifyContent: 'center' },
-
-                    headerTitleStyle: { fontWeight: 'bold', alignSelf: 'center', textAlign: 'center', justifyContent: 'center' }
-                }}/>
-                <Tab.Screen name="Games" component={GamesScreen}/>
-                <Tab.Screen name="Teams" component={TeamsScreen}/>
+                <Tab.Screen name="Map" component={MapScreen} options={HeaderOptions}/>
+                <Tab.Screen name="Games" component={GamesScreen} options={HeaderOptions}/>
+                <Tab.Screen name="Teams" children= {() => <TeamsListScreen playerId={'63c6f3353dbfc677bcb2e871'}/>} options={HeaderOptions}/>
             </Tab.Navigator>
         </NavigationContainer>
     );
