@@ -3,8 +3,9 @@ import {View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator} f
 import styled from 'styled-components/native';
 import {CardTeamListPlayer} from "./Card";
 import {teamsData} from "../StatitcDatatForTest/teamsData"
-import {ThemedButton,  } from 'react-native-really-awesome-button';
-const randomColor = Math.floor(Math.random()*16777215).toString(16);
+import {ThemedButton,} from 'react-native-really-awesome-button';
+
+const randomColor = Math.floor(Math.random() * 16777215).toString(16);
 const StyledViewForPlayers = styled(View)`
   background-color: black;
   color: white;
@@ -21,7 +22,7 @@ const TeamsByPlayerList = ({playerId}) => {
         fetch(`https://courts.onrender.com/teams/${playerId}`)
             .then(response => response.json())
             .then(data => {
-               setTeams(data)
+                setTeams(data)
                 setLoading(false);
             })
             .catch(error => console.error('Error:', error));
@@ -64,6 +65,17 @@ const TeamsByPlayerList = ({playerId}) => {
             />
         );
     };
+
+    const FooterButtons = () => {
+        return (
+            <View>
+                {!loading &&
+                    <ThemedButton style={{marginHorizontal: 70, marginVertical: 10}} stretch={false} name={"bruce"}
+                                  type="secondary" size={"large"}>New Team</ThemedButton>}
+                {!loading && <ThemedButton style={{marginHorizontal: 70, marginBottom: 20}} stretch={false} name={"bruce"} type="primary"
+                                           size={"large"}>Join Team</ThemedButton>}
+            </View>)
+    }
     console.log(teams);
     return (
         <View>
@@ -73,7 +85,7 @@ const TeamsByPlayerList = ({playerId}) => {
                 right: 0,
                 top: 300,
                 bottom: 0,
-            }} size={150} color="black" />
+            }} size={150} color="black"/>
 
             {!loading && <FlatList
                 data={teams}
@@ -81,10 +93,9 @@ const TeamsByPlayerList = ({playerId}) => {
                 keyExtractor={item => item._id?.toString()}
                 ItemSeparatorComponent={renderSeparatorView}
                 refreshing={!loading}
+                ListFooterComponent={FooterButtons}
             />}
 
-            {!loading && <ThemedButton style={{marginHorizontal: 70, marginVertical: 10}} stretch={false} name={"bruce"} type="secondary" size={"large"}>New Team</ThemedButton>}
-            {!loading && <ThemedButton style={{marginHorizontal: 70}} stretch={false} name={"bruce"} type="primary" size={"large"}>Join Team</ThemedButton>}
 
         </View>
     );
