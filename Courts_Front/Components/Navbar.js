@@ -5,6 +5,7 @@ import {View, Text} from "react-native";
 import {User, CourtsLogo, HeaderButtons} from "./Header";
 
 import TeamsListScreen from "./TeamsListScreen";
+
 const HeaderOptions = {
     headerTitle : (props) => <CourtsLogo/>,
     headerLeft : (props) =>  <User/>,
