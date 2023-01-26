@@ -50,6 +50,7 @@ const TeamsScreen = () => {
     return (
         <View>
             <Text>Teams Screen</Text>
+
         </View>
     )
 }
