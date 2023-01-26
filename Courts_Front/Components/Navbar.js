@@ -3,8 +3,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import {Ionicons, FontAwesome5, FontAwesome, AntDesign } from "@expo/vector-icons";
 import {View, Text} from "react-native";
 import {User, CourtsLogo, HeaderButtons} from "./Header";
-
 import TeamsListScreen from "./TeamsListScreen";
+import TeamsJoinScreen from "./TeamsJoinScreen";
 
 const HeaderOptions = {
     headerTitle : (props) => <CourtsLogo/>,
@@ -79,7 +79,7 @@ export default function Navbar() {
                 })}
             >
                 <Tab.Screen name="Map" component={MapScreen} options={HeaderOptions}/>
-                <Tab.Screen name="Games" component={GamesScreen} options={HeaderOptions}/>
+                <Tab.Screen name="Games" children={()=><TeamsJoinScreen playerId={'63c6f3353dbfc677bcb2e871'}/>} options={HeaderOptions}/>
                 <Tab.Screen name="Teams" children= {() => <TeamsListScreen playerId={'63c6f3353dbfc677bcb2e871'}/>} options={HeaderOptions}/>
             </Tab.Navigator>
         </NavigationContainer>

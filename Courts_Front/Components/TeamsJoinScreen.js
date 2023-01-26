@@ -1,31 +1,36 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
-import {CardTeamListPlayer} from "./Card";
-import {teamsData} from "../StatitcDatatForTest/teamsData"
-import {ThemedButton,  } from 'react-native-really-awesome-button';
-const randomColor = Math.floor(Math.random()*16777215).toString(16);
+import {CardTeamsToJoin} from "./Card";
+import {allTeamsData} from "../StatitcDatatForTest/allTeamsData"
+import {ThemedButton} from 'react-native-really-awesome-button';
+
 const StyledViewForPlayers = styled(View)`
   background-color: black;
   color: white;
   border-radius: 7px;
   margin: 5px 3px 5px 3px;
 `;
-const TeamsByPlayerList = ({playerId}) => {
+const TeamsJoinScreen = ({playerId}) => {
 
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         setLoading(true);
-        fetch(`https://courts.onrender.com/teams/${playerId}`)
+        fetch(`https://courts.onrender.com/teams/noplayer/${playerId}`)
             .then(response => response.json())
             .then(data => {
-               setTeams(data)
+                setTeams(data);
                 setLoading(false);
             })
             .catch(error => console.error('Error:', error));
     }, []);
+
+    // useEffect(()=>{
+    //     setTeams(allTeamsData);
+    // },[]);
+
 
     let PlayersInTeam = ({team}) => {
         return (
@@ -48,10 +53,10 @@ const TeamsByPlayerList = ({playerId}) => {
 
 
     const renderItem = ({item}) => {
-        console.log(item)
         return (
-            <CardTeamListPlayer title={item.name} children={<PlayersInTeam team={item}/>} details={item.details}/>
-
+            <View>
+                <CardTeamsToJoin title={item.name} children={<PlayersInTeam team={item}/>} details={item.details}/>
+            </View>
         );
     }
     const renderSeparatorView = () => {
@@ -64,7 +69,6 @@ const TeamsByPlayerList = ({playerId}) => {
             />
         );
     };
-    console.log(teams);
     return (
         <View>
             <ActivityIndicator animating={loading} style={{
@@ -73,21 +77,18 @@ const TeamsByPlayerList = ({playerId}) => {
                 right: 0,
                 top: 300,
                 bottom: 0,
-            }} size={150} color="black" />
-
-            {!loading && <FlatList
+            }} size={150} color="black"/>
+            <FlatList
                 data={teams}
                 renderItem={renderItem}
                 keyExtractor={item => item._id?.toString()}
                 ItemSeparatorComponent={renderSeparatorView}
                 refreshing={!loading}
-            />}
+            />
 
-            {!loading && <ThemedButton style={{marginHorizontal: 70, marginVertical: 10}} stretch={false} name={"bruce"} type="secondary" size={"large"}>New Team</ThemedButton>}
-            {!loading && <ThemedButton style={{marginHorizontal: 70}} stretch={false} name={"bruce"} type="primary" size={"large"}>Join Team</ThemedButton>}
 
         </View>
     );
 };
 
-export default TeamsByPlayerList;
+export default TeamsJoinScreen;

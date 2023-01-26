@@ -2,7 +2,9 @@ import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {Card} from 'react-native-elements';
 import styled from 'styled-components/native';
-import {Feather, MaterialCommunityIcons} from "@expo/vector-icons";
+import {Feather, FontAwesome, MaterialCommunityIcons} from "@expo/vector-icons";
+import ThemedButton from "react-native-really-awesome-button/src/themed/ThemedButton";
+
 
 
 const StyledCard = styled(Card.Divider)`
@@ -27,6 +29,7 @@ const StyledText = styled.Text`
 const StyledView = styled.View`
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: 30px;
 `;
 
 const StyledTitle = styled.Text`
@@ -34,12 +37,13 @@ const StyledTitle = styled.Text`
   font-weight: bold;
 `;
 const ButtonContainer = styled(View)`
-  display: flex;
+  //display: flex;
   flex-direction: row;
+
 `;
 
 
-const StylishCard = ({title, children, details}) => {
+const CardTeamListPlayer = ({title, children, details}) => {
     return (
 
         <StyledCard>
@@ -50,41 +54,39 @@ const StylishCard = ({title, children, details}) => {
                 <StyledTitle> Team Members:</StyledTitle>
                 {children}
             </StyledView>
-            <ButtonContainer style={{flex: 1,justifyContent:'flex-end', direction:'rtl'}}>
-                <TouchableOpacity style={{
-                    flexDirection: "row",
-                    alignContent: "center",
-                    alignItems: "center",
-                    height: 30,
-                    width: 75,
-                    backgroundColor: "palegreen",
-                    borderRadius: 20
-                }}>
-                    <Text> Edit </Text>
-                    <Feather name="edit" size={24} color="black"/>
-                </TouchableOpacity>
-                <TouchableOpacity style={{
-                    flexDirection: "row",
-                    alignContent: "center",
-                    alignItems: "center",
-                    justifyContent:"space-evenly",
-                    height: 30,
-                    width: 75 ,
-                    backgroundColor: "orangered",
-                    borderRadius: 20,
-                    margin: "5px 3px 5px 3px",
-
-                }}>
-                    <Text> Leave </Text>
+            <ButtonContainer style={{flex: 1, justifyContent:'flex-end', direction:'rtl'}}>
+              <ThemedButton style={{marginLeft: 5}} raiseLevel={2} borderRadius={30} activityColor={"darkgreen"} borderColor={"darkgreen"} backgroundColor={"darkseagreen"} width={60} stretch={false} name={"bruce"} type="primary" size={"small"}>
+                  <Feather name="edit" size={24} color="black"/>
+              </ThemedButton>
+                <ThemedButton  style={{marginLeft: 5}} raiseLevel={2} borderRadius={30} activityColor={"blue"} borderColor={"darkblue"} backgroundColor={"dodgerblue"} width={60} stretch={false} name={"bruce"} type="primary" size={"small"}>
+                    <FontAwesome name="plus" size={24} color="white" />
+                </ThemedButton>
+                <ThemedButton style={{marginLeft: 5}} raiseLevel={2} borderRadius={30} activityColor={"darkgreen"} borderColor={"darkgreen"} backgroundColor={"tomato"} width={60} stretch={false} name={"bruce"} type="primary" size={"small"}>
                     <MaterialCommunityIcons name="exit-run" size={24} color="black" />
-                </TouchableOpacity>
+                </ThemedButton>
             </ButtonContainer>
-
         </StyledCard>
     )
 };
 
-export default StylishCard;
+const CardTeamsToJoin = ({title, children, details}) =>{
+    return(
+        <StyledCard>
+            <StyledText>{title}</StyledText>
+            <StyledView style={{flex: 1, flexDirection: "row"}}>
+                <StyledTitle>Details:</StyledTitle>
+                <Text>{details}</Text>
+                <StyledTitle> Team Members:</StyledTitle>
+                {children}
+            </StyledView>
+            <ThemedButton  raiseLevel={2} borderRadius={30} activityColor={"darkgreen"} borderColor={"darkgreen"} backgroundColor={"green"} width={60} stretch={true} name={"bruce"} type="primary" size={"small"}>
+                <FontAwesome name="plus" size={24} color="white" />
+            </ThemedButton>
+        </StyledCard>
+    )
+}
+
+module.exports = {CardTeamListPlayer,CardTeamsToJoin};
 
 
 
