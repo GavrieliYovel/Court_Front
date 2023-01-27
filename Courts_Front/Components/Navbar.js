@@ -6,7 +6,7 @@ import {User, CourtsLogo, HeaderButtons} from "./Header";
 import TeamsListScreen from "./TeamsListScreen";
 import TeamsJoinScreen from "./TeamsJoinScreen";
 import TeamStack from "../Nevigation/TeamStack";
-
+import {Map} from '../views/map'
 const HeaderOptions = {
     headerTitle : (props) => <CourtsLogo/>,
     headerLeft : (props) =>  <User/>,
@@ -80,7 +80,7 @@ export default function Navbar() {
                     tabBarInactiveTintColor: 'grey',
                 })}
             >
-                <Tab.Screen name="Map" children={MapScreen} options={HeaderOptions}/>
+                <Tab.Screen name="Map" component={Map} options={HeaderOptions}/>
                 <Tab.Screen name="Games" children={ ()  => <TeamsJoinScreen playerId={'63c6f3353dbfc677bcb2e871'}/>} options={HeaderOptions}/>
                 {/*<Tab.Screen name="Teams" children= {() => <TeamsListScreen playerId={'63c6f3353dbfc677bcb2e871'}/>} options={HeaderOptions}/>*/}
                 <Tab.Screen name="Teams" component={TeamStack} options={HeaderOptions}/>

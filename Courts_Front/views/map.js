@@ -8,7 +8,7 @@ import MapViewDirections from "react-native-maps-directions";
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
-import {CourtModal} from '../components/courtModal';
+import {CourtModal} from '../Components/courtModal';
 
 export const Map = () => {
     const [courts, setCourts] = useState([]);
