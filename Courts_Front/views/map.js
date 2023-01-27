@@ -1,10 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import {useState, useEffect} from "react";
-import {Image, StyleSheet, Text, View, Modal, TouchableOpacity, Dimensions, Card} from 'react-native';
+import {Image, StyleSheet, Text, View, Modal, TouchableOpacity, Dimensions, Card, Button} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import * as Location from 'expo-location';
 import {Marker} from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
+
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 import {CourtModal, courtModal} from '../components/courtModal';
@@ -14,6 +15,7 @@ export const Map = () => {
     const [location, setLocation] = useState({});
     const [modalVisible, setModalVisible] = useState(false);
     const [markerData, setMarkerData] = useState({});
+    const [selectedLocation, setSelectedLocation] = useState({});
 
     const getCourtPins = () => {
         fetch("https://courts.onrender.com/courts")
@@ -80,6 +82,7 @@ export const Map = () => {
                     />
                 </Marker>
             )):[]}
+
         </MapView>
     );
 }
