@@ -8,7 +8,6 @@ import ConfirmChangesModal from "./ConfirmChngesModal";
 import {StackActions} from '@react-navigation/native';
 
 const playerId = '63c6f3353dbfc677bcb2e871';
-
 const teamDefault = {
     _id: null,
     name: "Team Name",
@@ -21,14 +20,13 @@ const labelStyle = StyleSheet.create({
     color: "black"
 })
 
-const TeamForm = ({navigation, route}) => {
+const TeamForm = ({navigation, route,}) => {
     let isNewTeam = false;
     const setNewTeam = () => {
         isNewTeam = true;
         return teamDefault
     }
     const team = route.params.team || setNewTeam();
-
     const [modalVisible, setModalVisible] = useState(false);
     const [name, setName] = useState(team.name);
     const [details, setDetails] = useState(team.details);
@@ -44,11 +42,9 @@ const TeamForm = ({navigation, route}) => {
         )
     );
 
-
     const handleSubmit = () => {
-        console.log("here");
         setModalVisible(true);
-    };
+    }
 
     return (
         <View style={{
@@ -56,8 +52,10 @@ const TeamForm = ({navigation, route}) => {
             justifyContent: 'center',
             alignItems: 'center',
         }}>
-            <ConfirmChangesModal visible={modalVisible} onConfirm={() => console.log("Confirm")}
-                                 onCancel={() => navigation.dispatch(StackActions.pop(1))}/>
+            {modalVisible && <ConfirmChangesModal style = {styles.modal}visible={true}
+                                                  onConfirm={() => console.log("Confirm")}
+                                                  onCancel={() => navigation.dispatch(StackActions.pop(1))}
+            />}
             <Input label={"Team name:"} labelStyle={labelStyle} placeholder={`${name}`}
                    onChange={newName => setName(newName)}/>
             <Input label={"Details:"} labelStyle={labelStyle} placeholder={`${details}`}
@@ -71,5 +69,22 @@ const TeamForm = ({navigation, route}) => {
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    modal: {
+        margin: 20,
+        backgroundColor: 'white',
+        height: 50,
+        width: 50,
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        }
+    }
+})
 
 export default TeamForm;
