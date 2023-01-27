@@ -79,7 +79,7 @@ export const CourtModal = ({ modalVisible, markerData, onClose }) => {
                 <View style={styles.item}>
                     <Text>{date}</Text>
                     <Text>{scope}</Text>
-                    <Text>{start}-{end}</Text>
+                    <Text style={{marginBottom: 5}} >{start}-{end}</Text>
                     { inTeam.find(team => team._id == teamID)?
                         <ThemedButton
                             onPress={ () => { LeaveTeam(teamID)}}
@@ -100,19 +100,23 @@ export const CourtModal = ({ modalVisible, markerData, onClose }) => {
 
     return (
         <Modal
-            animationType="slide"
             transparent={false}
             visible={modalVisible}
         >
         <View style={styles.modalContainer}>
-            <Text style={styles.title}>{markerData?.name}</Text>
-            <Text>{markerData?.city}</Text>
-            <Text>{markerData?.scope?.join(", ")}</Text>
-            <Text>Games: </Text>
+            <View style={{display:"flex", flexDirection:"row", justifyContent: "space-between", alignSelf:"flex-start", width:"100%"}}>
+                <View>
+                    <Text style={styles.title}>{markerData?.name}</Text>
+                    <Text>{markerData?.city}</Text>
+                    <Text>{markerData?.scope?.join(", ")}</Text>
+                </View>
+                <ThemedButton raiseLevel={1} height={30} width={45}  onPress={onClose} name="bruce" type="primary" size="small">X</ThemedButton>
+            </View>
+            <Text style={{fontWeight: "bold", fontSize:20, marginTop:7}} >Games: </Text>
             <View style={styles.selector}>
-                <Button title={"<"} onPress={ () => setInDate(moment(inDate).subtract(1, 'day'))}/>
-                <Text>{moment(inDate).format("DD-MM-YYYY")}</Text>
-                <Button title={">"} onPress={ () => setInDate(moment(inDate).add(1, 'day'))} />
+                <ThemedButton raiseLevel={1} height={30} width={45} name="bruce" type="primary" size={"small"} onPress={ () => setInDate(moment(inDate).subtract(1, 'day'))}>{"<"}</ThemedButton>
+                <Text style={styles.datePicker}>{moment(inDate).format("DD-MM-YYYY")}</Text>
+                <ThemedButton raiseLevel={1} height={30} width={45} name="bruce" type="primary" size="small" onPress={ () => setInDate(moment(inDate).add(1, 'day'))}>{">"}</ThemedButton>
             </View>
 
             <FlatList
@@ -129,8 +133,9 @@ export const CourtModal = ({ modalVisible, markerData, onClose }) => {
             {/*<TouchableOpacity onPress={onClose}>*/}
             {/*    <Text>Close</Text>*/}
             {/*</TouchableOpacity>*/}
-            <ThemedButton style={styles.rightButton} onPress={onClose} name="bruce" type="primary" size="small">Close</ThemedButton>
-            <ThemedButton style={styles.leftButton} name="bruce" type="primary">Create Game</ThemedButton>
+
+
+            <ThemedButton name="bruce" type="primary" size="small">Create Game</ThemedButton>
         </View>
         </Modal>
     );
@@ -163,24 +168,28 @@ const styles = StyleSheet.create({
         padding: 20
     },
     title: {
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        fontSize: 24,
+
     },
     buttonStyle: {
         marginTop: 10,
         borderRadius: 20
     },
     selector: {
-        display: "flex"
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center"
     },
-    leftButton: {
-        position: 'absolute',
-        bottom:10,
-        right:-10,
+    datePicker: {
+        fontWeight: "bold",
+        marginHorizontal: 5
     },
-    rightButton: {
-        position: 'absolute',
-        bottom:10,
-        left: 50,
+    datePickerButton: {
+        backgroundColor: "#3A3A3A",
+        height: 30,
+        width: 45,
     }
 
 });
