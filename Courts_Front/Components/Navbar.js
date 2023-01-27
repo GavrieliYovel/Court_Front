@@ -5,6 +5,7 @@ import {View, Text} from "react-native";
 import {User, CourtsLogo, HeaderButtons} from "./Header";
 import TeamsListScreen from "./TeamsListScreen";
 import TeamsJoinScreen from "./TeamsJoinScreen";
+import TeamStack from "../Nevigation/TeamStack";
 
 const HeaderOptions = {
     headerTitle : (props) => <CourtsLogo/>,
@@ -59,7 +60,7 @@ const TeamsScreen = () => {
 
 export default function Navbar() {
     return (
-        <NavigationContainer>
+        // <NavigationContainer>
             <Tab.Navigator
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
@@ -80,9 +81,10 @@ export default function Navbar() {
                 })}
             >
                 <Tab.Screen name="Map" children={MapScreen} options={HeaderOptions}/>
-                <Tab.Screen name="Games" children={()=><TeamsJoinScreen playerId={'63c6f3353dbfc677bcb2e871'}/>} options={HeaderOptions}/>
-                <Tab.Screen name="Teams" children= {() => <TeamsListScreen playerId={'63c6f3353dbfc677bcb2e871'}/>} options={HeaderOptions}/>
+                <Tab.Screen name="Games" children={ ()  => <TeamsJoinScreen playerId={'63c6f3353dbfc677bcb2e871'}/>} options={HeaderOptions}/>
+                {/*<Tab.Screen name="Teams" children= {() => <TeamsListScreen playerId={'63c6f3353dbfc677bcb2e871'}/>} options={HeaderOptions}/>*/}
+                <Tab.Screen name="Teams" component={TeamStack} options={HeaderOptions}/>
             </Tab.Navigator>
-        </NavigationContainer>
+        // </NavigationContainer>
     );
 }

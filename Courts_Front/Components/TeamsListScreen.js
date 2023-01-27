@@ -1,18 +1,43 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, FlatList, Text, View} from 'react-native';
 import styled from 'styled-components/native';
 import {CardTeamListPlayer} from "./Card";
-import {teamsData} from "../StatitcDatatForTest/teamsData"
 import {ThemedButton,} from 'react-native-really-awesome-button';
+import seedrandom from 'seedrandom';
 
-const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+
+function idToColor(id) {
+
+    const colors =[
+        "#ff0000", // red
+        "#00ff00", // green
+        "#0000ff", // blue
+        "#800080", // purple
+        "#ffa500", // orange
+        "#ffc0cb", // pink
+        "#00ffff", // cyan
+        "#ff00ff", // magenta
+        "#800000", // maroon
+        "#808000", // olive
+        "#008080", // teal
+        "#000000" // black
+    ];
+
+    seedrandom(id, {global: true});
+
+    const c = colors[Math.floor(Math.random() * colors.length)];
+    console.log(c);
+    return c;
+}
 const StyledViewForPlayers = styled(View)`
-  background-color: black;
+  //background-color: black;
   color: white;
   border-radius: 7px;
   margin: 5px 3px 5px 3px;
 `;
-const TeamsByPlayerList = ({playerId}) => {
+const playerId = '63c6f3353dbfc677bcb2e871'
+
+const TeamsByPlayerList = ({navigation}) => {
 
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -31,8 +56,9 @@ const TeamsByPlayerList = ({playerId}) => {
     let PlayersInTeam = ({team}) => {
         return (
             team.players.map((player) => {
+                const color = idToColor(player._id);
                 return (<StyledViewForPlayers><Text
-                    style={{color: 'white'}}>{player.name}</Text></StyledViewForPlayers>)
+                    style={{color: color, fontWeight: "bold" }}>{player.name}</Text></StyledViewForPlayers>)
             })
 
         )
@@ -51,8 +77,7 @@ const TeamsByPlayerList = ({playerId}) => {
     const renderItem = ({item}) => {
         console.log(item)
         return (
-            <CardTeamListPlayer title={item.name} children={<PlayersInTeam team={item}/>} details={item.details}/>
-
+            <CardTeamListPlayer navigation={navigation} team ={item} children={<PlayersInTeam team={item} />} details={item.details}/>
         );
     }
     const renderSeparatorView = () => {

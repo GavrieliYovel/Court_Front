@@ -43,19 +43,19 @@ const ButtonContainer = styled(View)`
 `;
 
 
-const CardTeamListPlayer = ({title, children, details}) => {
+const CardTeamListPlayer = ({navigation, children, team}) => {
     return (
 
         <StyledCard>
-            <StyledText>{title}</StyledText>
+            <StyledText>{team.name}</StyledText>
             <StyledView style={{flex: 1, flexDirection: "row"}}>
                 <StyledTitle>Details:</StyledTitle>
-                <Text>{details}</Text>
+                <Text>{team.details}</Text>
                 <StyledTitle> Team Members:</StyledTitle>
                 {children}
             </StyledView>
             <ButtonContainer style={{flex: 1, justifyContent:'flex-end', direction:'rtl'}}>
-              <ThemedButton style={{marginLeft: 5}} raiseLevel={2} borderRadius={30} activityColor={"darkgreen"} borderColor={"darkgreen"} backgroundColor={"darkseagreen"} width={60} stretch={false} name={"bruce"} type="primary" size={"small"}>
+              <ThemedButton onPress={() => navigation.navigate("TeamForm",{title : team.name, team: team})} style={{marginLeft: 5}} raiseLevel={2} borderRadius={30} activityColor={"darkgreen"} borderColor={"darkgreen"} backgroundColor={"darkseagreen"} width={60} stretch={false} name={"bruce"} type="primary" size={"small"}>
                   <Feather name="edit" size={24} color="black"/>
               </ThemedButton>
                 <ThemedButton  style={{marginLeft: 5}} raiseLevel={2} borderRadius={30} activityColor={"blue"} borderColor={"darkblue"} backgroundColor={"dodgerblue"} width={60} stretch={false} name={"bruce"} type="primary" size={"small"}>
@@ -69,7 +69,7 @@ const CardTeamListPlayer = ({title, children, details}) => {
     )
 };
 
-const CardTeamsToJoin = ({title, children, details}) =>{
+const CardTeamsToJoin = ({navigation, title, children, details}) =>{
     return(
         <StyledCard>
             <StyledText>{title}</StyledText>

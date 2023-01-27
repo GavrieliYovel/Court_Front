@@ -11,7 +11,7 @@ const StyledViewForPlayers = styled(View)`
   border-radius: 7px;
   margin: 5px 3px 5px 3px;
 `;
-const TeamsJoinScreen = ({playerId}) => {
+const TeamsJoinScreen = ({ navigation, playerId}) => {
 
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -46,16 +46,16 @@ const TeamsJoinScreen = ({playerId}) => {
     ;
       color: white;
       font-weight: bold;
-      border-radius: 10;
+      border-radius: 10px;
       margin: 10px;
-      padding: 20px;
+      padding: 50px;
     `;
 
 
     const renderItem = ({item}) => {
         return (
             <View>
-                <CardTeamsToJoin title={item.name} children={<PlayersInTeam team={item}/>} details={item.details}/>
+                <CardTeamsToJoin navigation ={navigation} title={item.name} children={<PlayersInTeam team={item}/>} details={item.details}/>
             </View>
         );
     }
