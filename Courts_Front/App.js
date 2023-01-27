@@ -1,12 +1,36 @@
-import {useState, useEffect} from "react";
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import { Map } from './views/map'
-
+import {StatusBar} from 'expo-status-bar';
+import {StyleSheet, Text, View} from 'react-native';
+import Navbar from "./Components/Navbar";
+import {NavigationContainer} from '@react-navigation/native';
 
 
 export default function App() {
     return (
-        <Map />
-
+        // <View style={styles.container}>
+        //   <Text>Hello Pe'er</Text>
+        //   <StatusBar style="auto" />
+        // </View>
+        <NavigationContainer>
+            <Navbar/>
+        </NavigationContainer>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
+
+// import React from "react";
+// import {NativeBaseProvider, Box} from "native-base";
+// import Example from "./Components/Navbar";
+//
+// export default function App() {
+//     return (
+//         <Example/>
+//     );
+// }
