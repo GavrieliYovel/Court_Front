@@ -7,6 +7,9 @@ import TeamsListScreen from "./TeamsListScreen";
 import TeamsJoinScreen from "./TeamsJoinScreen";
 import TeamStack from "../Nevigation/TeamStack";
 import {Map} from '../views/map'
+import {useSelector} from "react-redux";
+import {selectUser} from "../features/userSlice";
+
 const HeaderOptions = {
     headerTitle : (props) => <CourtsLogo/>,
     headerLeft : (props) =>  <User/>,
@@ -59,6 +62,7 @@ const TeamsScreen = () => {
 
 
 export default function Navbar() {
+
     return (
         // <NavigationContainer>
             <Tab.Navigator

@@ -37,8 +37,8 @@ export const Map = () => {
 
                 let position = await Location.getCurrentPositionAsync({});
                 setLocation(position);
-                console.log("found")
-                await getCourtPins()
+                console.log("found");
+                await getCourtPins();
             } catch (error) {
                 console.log(error);
             }
