@@ -7,7 +7,7 @@ import {
     TouchableOpacity,
     Image,
     StyleSheet,
-    Button
+    Button, Platform
 } from 'react-native';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -15,7 +15,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {getUser, selectUser} from '../features/userSlice';
 import {store} from "../store";
 import {useSelector} from "react-redux";
-import DatePicker from 'react-native-datepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from "moment";
 
 const styles = StyleSheet.create({
     tinyLogo: {
@@ -31,43 +32,74 @@ const styles = StyleSheet.create({
     }
 });
 
-export const RegisterScreen = () => {
+export const RegisterScreen = ({navigation}) => {
     const [email, onChangeEmail] = React.useState('');
     const [password, onChangePassword] = React.useState('');
     const [confirmPassword, onChangeConfirmPassword] = React.useState('');
+
+    //datetimepicker
     const [date, setDate] = useState(new Date());
-    const [open, setOpen] = useState(false);
-    const [dobLabel, setDobLabel] = useState('Date of Birth');
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+    const [text, setText] = useState('Date of Birth');
+
     const [phone, onChangePhone] = useState('');
     const [address, onChangeAddress] = useState('');
     const [name, onChangeName] = useState('');
+
+
+    const onChange= (event, selectedDate) => {
+        console.log(selectedDate);
+        const currentDate = selectedDate || date;
+        setShow(Platform.OS === 'ios');
+        setDate(currentDate);
+
+        let tempDate = new Date(currentDate);
+        let fDate = moment(tempDate).format("DD-MM-YYYY");
+        let fTime = moment(tempDate).format("HH:mm A")
+        setText(fDate);
+        console.log(fDate);
+    }
+    const showMode = (currentMode) => {
+        setShow(true);
+        setMode(currentMode);
+    }
 
     const handleRegister = (userID, name) => {
         store.dispatch(getUser({ userID, name }));
     }
     const onPressRegister = () => {
         console.log('clicked');
-        fetch('https://courts.onrender.com/users/login', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: email.toLowerCase(),
-                password: password
+        if(password == confirmPassword) {
+            fetch('https://courts.onrender.com/users/new', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    email: email.toLowerCase(),
+                    password: password,
+                    birthday: date,
+                    type: 'player'
+                })
             })
-        })
-            .then(response => response.json())
-            .then(data => {
-                handleRegister(data._id, data.name);
-                console.log(user);
-            } )
-            .catch(e => console.log('login fail'))
+                .then(response => response.json())
+                .then(data => {
+                    handleRegister(data._id, data.name);
+                    console.log(user);
+                } )
+                .catch(e => console.log('login fail'))
+        } else {
+            console.log('password do match')
+        }
+
+
 
     }
     return (
-        <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
+        <SafeAreaView style={{flex: 1, justifyContent: 'center',backgroundColor:"white"}}>
             <View style={{paddingHorizontal: 25}}>
                 <View style={{alignItems: 'center'}}>
                     <Image
@@ -162,36 +194,46 @@ export const RegisterScreen = () => {
                         color="#666"
                         style={{marginRight: 5}}
                     />
-                    <TouchableOpacity onPress={() => setOpen(true)}>
+                    <TouchableOpacity onPress={() => showMode('date')}>
                         <Text style={{color: '#666', marginLeft: 5, marginTop: 5}}>
-                            {dobLabel}
+                            {text}
                         </Text>
                     </TouchableOpacity>
                 </View>
-                <DatePicker
-                    style={{width: 200}}
-                    date={date}
-                    mode="date"
-                    placeholder="select date"
-                    format="YYYY-MM-DD"
-                    minDate="2016-05-01"
-                    maxDate="2016-06-01"
-                    confirmBtnText="Confirm"
-                    cancelBtnText="Cancel"
-                    customStyles={{
-                        dateIcon: {
-                            position: 'absolute',
-                            left: 0,
-                            top: 4,
-                            marginLeft: 0
-                        },
-                        dateInput: {
-                            marginLeft: 36
-                        }
-                        // ... You can check the source to find the other keys.
-                    }}
-                    onDateChange={(date) => setDate(date)}
-                />
+                {show && (
+                    <DateTimePicker
+                        testID='dateTimePicker'
+                        value={date}
+                        mode={mode}
+                        is24Hour={true}
+                        display='default'
+                        onChange={onChange}
+                    />
+                )}
+                {/*<DatePicker*/}
+                {/*    style={{width: 200}}*/}
+                {/*    date={date}*/}
+                {/*    mode="date"*/}
+                {/*    placeholder="select date"*/}
+                {/*    format="YYYY-MM-DD"*/}
+                {/*    minDate="2016-05-01"*/}
+                {/*    maxDate="2016-06-01"*/}
+                {/*    confirmBtnText="Confirm"*/}
+                {/*    cancelBtnText="Cancel"*/}
+                {/*    customStyles={{*/}
+                {/*        dateIcon: {*/}
+                {/*            position: 'absolute',*/}
+                {/*            left: 0,*/}
+                {/*            top: 4,*/}
+                {/*            marginLeft: 0*/}
+                {/*        },*/}
+                {/*        dateInput: {*/}
+                {/*            marginLeft: 36*/}
+                {/*        }*/}
+                {/*        // ... You can check the source to find the other keys.*/}
+                {/*    }}*/}
+                {/*    onDateChange={(date) => setDate(date)}*/}
+                {/*/>*/}
                 <Button
                     onPress={onPressRegister}
                     title="Register"
@@ -205,9 +247,9 @@ export const RegisterScreen = () => {
                         justifyContent: 'center',
                         marginTop: 30,
                     }}>
-                    <Text>New to the app?</Text>
-                    <TouchableOpacity>
-                        <Text style={{color: 'steelblue', fontWeight: '700'}}> Register</Text>
+                    <Text>Already registered?</Text>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Text style={{color: '#AD40AF', fontWeight: '700'}}> Login</Text>
                     </TouchableOpacity>
                 </View>
             </View>

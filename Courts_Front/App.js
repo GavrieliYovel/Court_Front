@@ -8,7 +8,7 @@ import { RegisterScreen } from "./views/registerPage"
 import { Provider, useDispatch, useSelector } from 'react-redux'
 import { store } from './store'
 import {selectUser} from "./features/userSlice";
-
+import {RegisterStack} from './Nevigation/RegistrationStack'
 
 function App() {
     const user = useSelector(selectUser);
@@ -17,7 +17,7 @@ function App() {
             <NavigationContainer>
 
                 {user.userID &&  <Navbar/>}
-                {!user.userID &&  <RegisterScreen/>}
+                {!user.userID &&  <RegisterStack/>}
 
             </NavigationContainer>
     );

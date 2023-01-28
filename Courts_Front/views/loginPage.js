@@ -16,6 +16,7 @@ import {getUser, selectUser} from '../features/userSlice';
 import {store} from "../store";
 import {useSelector} from "react-redux";
 
+
 const styles = StyleSheet.create({
     tinyLogo: {
         width: 300,
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
     }
 });
 
-export const LoginScreen = () => {
+export const LoginScreen = ({navigation}) => {
     const [email, onChangeEmail] = React.useState('');
     const [password, onChangePassword] = React.useState('');
     const user = useSelector(selectUser);
@@ -58,7 +59,7 @@ export const LoginScreen = () => {
             .catch(e => console.log('login fail'))
     }
     return (
-        <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
+        <SafeAreaView style={{flex: 1, justifyContent: 'center',backgroundColor:"white"}}>
             <View style={{paddingHorizontal: 25}}>
                 <View style={{alignItems: 'center'}}>
                     <Image
@@ -124,7 +125,7 @@ export const LoginScreen = () => {
                         marginTop: 30,
                     }}>
                     <Text>New to the app?</Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')}>
                         <Text style={{color: 'steelblue', fontWeight: '700'}}> Register</Text>
                     </TouchableOpacity>
                 </View>
