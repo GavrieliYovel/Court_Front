@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import ConfirmChangesModal from "./ConfirmChngesModal";
+import ConfirmChangesModal from "./ConfirmChangesModal";
 import {StackActions} from "@react-navigation/native";
 import {Input} from "react-native-elements";
 import {MultipleSelectList} from "react-native-dropdown-select-list/index";

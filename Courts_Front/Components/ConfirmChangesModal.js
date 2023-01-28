@@ -3,7 +3,7 @@ import {View, Text, Modal, Button, StyleSheet, ActivityIndicator} from 'react-na
 import {Feather, Fontisto, Foundation, MaterialCommunityIcons} from "@expo/vector-icons";
 import ThemedButton from "react-native-really-awesome-button/src/themed/ThemedButton";
 
-const ConfirmChangesModal = ({message, visible, onConfirm, onCancel, loading}) => {
+const ConfirmChangesModal = ({message, visible, onConfirm, onCancel, loading =false}) => {
     const [isVisible, setIsVisible] = useState(visible);
 
     return (
@@ -100,7 +100,10 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         marginTop: 50,
-        marginLeft: 45,
+        alignContent:'center',
+        alignItems: 'center',
+        justifyContent: 'space-evenly'
+        // marginLeft: 45,
     }
 });
 export default ConfirmChangesModal;

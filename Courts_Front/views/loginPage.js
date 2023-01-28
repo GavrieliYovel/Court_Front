@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
 });
 
 export const LoginScreen = ({navigation}) => {
-    const [email, onChangeEmail] = React.useState('');
-    const [password, onChangePassword] = React.useState('');
+    const [email, onChangeEmail] = React.useState('yovel@gmail.com');
+    const [password, onChangePassword] = React.useState('123456');
     const user = useSelector(selectUser);
     const handleLogin = (userID, name) => {
         store.dispatch(getUser({ userID, name }));

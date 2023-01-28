@@ -1,49 +1,26 @@
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, FlatList, Text, View} from 'react-native';
-import styled from 'styled-components/native';
 import {CardTeamListPlayer} from "./Card";
 import {ThemedButton,} from 'react-native-really-awesome-button';
-import seedrandom from 'seedrandom';
 import {useIsFocused} from "@react-navigation/native";
 import {useSelector} from "react-redux";
 import {selectUser} from "../features/userSlice";
+import PlayersInTeam from "./PlayersInTeam";
+import leaveTeam from "../Fetches/leaveTeam";
+import ConfirmChangesModal from "./ConfirmChangesModal";
 
 
-function idToColor(id) {
-
-    const colors =[
-        "#ff0000", // red
-        "#00ff00", // green
-        "#0000ff", // blue
-        "#800080", // purple
-        "#ffa500", // orange
-        "#ffc0cb", // pink
-        "#00ffff", // cyan
-        "#ff00ff", // magenta
-        "#800000", // maroon
-        "#808000", // olive
-        "#008080", // teal
-        "#000000" // black
-    ];
-
-    seedrandom(id, {global: true});
-
-    const c = colors[Math.floor(Math.random() * colors.length)];
-    console.log(c);
-    return c;
-}
-const StyledViewForPlayers = styled(View)`
-  //background-color: black;
-  color: white;
-  border-radius: 7px;
-  margin: 5px 3px 5px 3px;
-`;
 // const playerId = '63c6f3353dbfc677bcb2e871'
 
 const TeamsByPlayerList = ({navigation}) => {
     const user = useSelector(selectUser);
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [exitTeam, setExitTeam] = useState({})
+    const [loadModal, setLoadModal] =useState(false);
+    const [render, setRender] = useState(false)
+
     const isFocused = useIsFocused();
 
     useEffect(() => {
@@ -55,33 +32,25 @@ const TeamsByPlayerList = ({navigation}) => {
                 setLoading(false);
             })
             .catch(error => console.error('Error:', error));
-    }, [isFocused]);
+    }, [isFocused, render]);
 
-    let PlayersInTeam = ({team}) => {
-        return (
-            team.players.map((player) => {
-                const color = idToColor(player._id);
-                return (<StyledViewForPlayers><Text
-                    style={{color: color, fontWeight: "bold" }}>{player.name}</Text></StyledViewForPlayers>)
-            })
-
-        )
+    const exitTeamHandler = (team) => {
+        setLoadModal(true);
+        leaveTeam(exitTeam._id, user.userID).then((response) => {
+            setLoadModal(false)
+            setShowModal(false);
+            setRender(!render);
+        });
     }
-
-    PlayersInTeam = styled(PlayersInTeam)`
-    ;
-      color: white;
-      font-weight: bold;
-      border-radius: 10;
-      margin: 10px;
-      padding: 20px;
-    `;
 
 
     const renderItem = ({item}) => {
-        console.log(item)
         return (
-            <CardTeamListPlayer navigation={navigation} team ={item} children={<PlayersInTeam team={item} />} details={item.details}/>
+            <CardTeamListPlayer onExit={(team) => {
+                setExitTeam(team)
+                setShowModal(true)
+            }
+            } navigation={navigation} team={item} children={<PlayersInTeam team={item}/>} details={item.details}/>
         );
     }
     const renderSeparatorView = () => {
@@ -101,14 +70,20 @@ const TeamsByPlayerList = ({navigation}) => {
             <View>
                 {!loading &&
                     <ThemedButton style={{marginHorizontal: 70, marginVertical: 10}} stretch={false} name={"bruce"}
+                                  onPress={() =>{navigation.navigate("TeamForm", {title: "New Team"})}}
                                   type="secondary" size={"large"}>New Team</ThemedButton>}
-                {!loading && <ThemedButton style={{marginHorizontal: 70, marginBottom: 20}} stretch={false} name={"bruce"} type="primary"
-                                            onPress={()=>{navigation.navigate("OtherTeams",{playerId: user.userID})}} size={"large"}>Join Team</ThemedButton>}
+                {!loading &&
+                    <ThemedButton style={{marginHorizontal: 70, marginBottom: 20}} stretch={false} name={"bruce"}
+                                  type="primary"
+                                  onPress={() => {
+                                      navigation.navigate("OtherTeams", {playerId: user.userID})
+                                  }} size={"large"}>Join Team</ThemedButton>}
             </View>)
     }
 
     return (
         <View>
+            {showModal && <ConfirmChangesModal onConfirm={exitTeamHandler} message={`Leave ${exitTeam.name}?`} onCancel={() => setShowModal(false)} loading={loadModal}/>}
             <ActivityIndicator animating={loading} style={{
                 position: 'absolute',
                 left: 0,

@@ -85,7 +85,7 @@ export default function Navbar() {
                 })}
             >
                 <Tab.Screen name="Map" component={GameStack} options={HeaderOptions}/>
-                <Tab.Screen name="Games" children={ ()  => <TeamsJoinScreen playerId={'63c6f3353dbfc677bcb2e871'}/>} options={HeaderOptions}/>
+               <Tab.Screen name="Games" component={GamesScreen} options={HeaderOptions}/>
                 {/*<Tab.Screen name="Teams" children= {() => <TeamsListScreen playerId={'63c6f3353dbfc677bcb2e871'}/>} options={HeaderOptions}/>*/}
                 <Tab.Screen name="Teams" component={TeamStack} options={HeaderOptions}/>
             </Tab.Navigator>
