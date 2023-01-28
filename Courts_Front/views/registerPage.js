@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     SafeAreaView,
     View,
@@ -15,6 +15,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {getUser, selectUser} from '../features/userSlice';
 import {store} from "../store";
 import {useSelector} from "react-redux";
+import DatePicker from 'react-native-datepicker';
 
 const styles = StyleSheet.create({
     tinyLogo: {
@@ -30,14 +31,21 @@ const styles = StyleSheet.create({
     }
 });
 
-export const LoginScreen = () => {
+export const RegisterScreen = () => {
     const [email, onChangeEmail] = React.useState('');
     const [password, onChangePassword] = React.useState('');
-    const user = useSelector(selectUser);
-    const handleLogin = (userID, name) => {
+    const [confirmPassword, onChangeConfirmPassword] = React.useState('');
+    const [date, setDate] = useState(new Date());
+    const [open, setOpen] = useState(false);
+    const [dobLabel, setDobLabel] = useState('Date of Birth');
+    const [phone, onChangePhone] = useState('');
+    const [address, onChangeAddress] = useState('');
+    const [name, onChangeName] = useState('');
+
+    const handleRegister = (userID, name) => {
         store.dispatch(getUser({ userID, name }));
     }
-    const onPressLogin = () => {
+    const onPressRegister = () => {
         console.log('clicked');
         fetch('https://courts.onrender.com/users/login', {
             method: 'POST',
@@ -52,10 +60,11 @@ export const LoginScreen = () => {
         })
             .then(response => response.json())
             .then(data => {
-                handleLogin(data._id, data.name);
+                handleRegister(data._id, data.name);
                 console.log(user);
             } )
             .catch(e => console.log('login fail'))
+
     }
     return (
         <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
@@ -75,9 +84,22 @@ export const LoginScreen = () => {
                         marginBottom: 30,
                         marginTop: 30,
                     }}>
-                    Login
+                    Register
                 </Text>
-
+                <View style={styles.labelStyle}>
+                    <Ionicons
+                        name="person-outline"
+                        size={20}
+                        color="#666"
+                        style={{marginRight: 5}}
+                    />
+                    <TextInput
+                        value= {name}
+                        placeholder="Full Name"
+                        onChangeText={onChangeName}
+                    >
+                    </TextInput>
+                </View>
                 <View style={styles.labelStyle}>
                     <MaterialIcons
                         name="alternate-email"
@@ -109,10 +131,70 @@ export const LoginScreen = () => {
 
                     </TextInput>
                 </View>
+                <View style={styles.labelStyle}>
+                    <Ionicons
+                        name="ios-lock-closed-outline"
+                        size={20}
+                        color="#666"
+                        style={{marginRight: 5}}
+                    />
+                    <TextInput
+                        value={confirmPassword}
+                        placeholder= "Confirm Password"
+                        onChangeText={onChangeConfirmPassword}
+                        style={{flex: 1, paddingVertical: 0}}
+                        secureTextEntry={true}
+                    >
 
+                    </TextInput>
+                </View>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        borderBottomColor: '#ccc',
+                        borderBottomWidth: 1,
+                        paddingBottom: 8,
+                        marginBottom: 30,
+                    }}>
+                    <Ionicons
+                        name="calendar-outline"
+                        size={20}
+                        color="#666"
+                        style={{marginRight: 5}}
+                    />
+                    <TouchableOpacity onPress={() => setOpen(true)}>
+                        <Text style={{color: '#666', marginLeft: 5, marginTop: 5}}>
+                            {dobLabel}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+                <DatePicker
+                    style={{width: 200}}
+                    date={date}
+                    mode="date"
+                    placeholder="select date"
+                    format="YYYY-MM-DD"
+                    minDate="2016-05-01"
+                    maxDate="2016-06-01"
+                    confirmBtnText="Confirm"
+                    cancelBtnText="Cancel"
+                    customStyles={{
+                        dateIcon: {
+                            position: 'absolute',
+                            left: 0,
+                            top: 4,
+                            marginLeft: 0
+                        },
+                        dateInput: {
+                            marginLeft: 36
+                        }
+                        // ... You can check the source to find the other keys.
+                    }}
+                    onDateChange={(date) => setDate(date)}
+                />
                 <Button
-                    onPress={onPressLogin}
-                    title="Login"
+                    onPress={onPressRegister}
+                    title="Register"
                     color="steelblue"
                     accessibilityLabel="Login"
                 />
@@ -132,5 +214,3 @@ export const LoginScreen = () => {
         </SafeAreaView>
     );
 };
-
-

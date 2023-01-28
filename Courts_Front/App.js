@@ -4,6 +4,7 @@ import Navbar from "./Components/Navbar";
 import {NavigationContainer} from '@react-navigation/native';
 import {useState} from "react";
 import { LoginScreen } from "./views/loginPage"
+import { RegisterScreen } from "./views/registerPage"
 import { Provider, useDispatch, useSelector } from 'react-redux'
 import { store } from './store'
 import {selectUser} from "./features/userSlice";
@@ -16,7 +17,7 @@ function App() {
             <NavigationContainer>
 
                 {user.userID &&  <Navbar/>}
-                {!user.userID &&  <LoginScreen/>}
+                {!user.userID &&  <RegisterScreen/>}
 
             </NavigationContainer>
     );
