@@ -4,6 +4,7 @@ import styled from 'styled-components/native';
 import {CardTeamListPlayer} from "./Card";
 import {ThemedButton,} from 'react-native-really-awesome-button';
 import seedrandom from 'seedrandom';
+import {useIsFocused} from "@react-navigation/native";
 
 
 function idToColor(id) {
@@ -41,6 +42,7 @@ const TeamsByPlayerList = ({navigation}) => {
 
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(false);
+    const isFocused = useIsFocused()
 
     useEffect(() => {
         setLoading(true);
@@ -51,7 +53,7 @@ const TeamsByPlayerList = ({navigation}) => {
                 setLoading(false);
             })
             .catch(error => console.error('Error:', error));
-    }, []);
+    }, [isFocused]);
 
     let PlayersInTeam = ({team}) => {
         return (
@@ -91,6 +93,7 @@ const TeamsByPlayerList = ({navigation}) => {
         );
     };
 
+
     const FooterButtons = () => {
         return (
             <View>
@@ -98,10 +101,10 @@ const TeamsByPlayerList = ({navigation}) => {
                     <ThemedButton style={{marginHorizontal: 70, marginVertical: 10}} stretch={false} name={"bruce"}
                                   type="secondary" size={"large"}>New Team</ThemedButton>}
                 {!loading && <ThemedButton style={{marginHorizontal: 70, marginBottom: 20}} stretch={false} name={"bruce"} type="primary"
-                                           size={"large"}>Join Team</ThemedButton>}
+                                            onPress={()=>{navigation.navigate("OtherTeams",{playerId: playerId})}} size={"large"}>Join Team</ThemedButton>}
             </View>)
     }
-    console.log(teams);
+
     return (
         <View>
             <ActivityIndicator animating={loading} style={{
