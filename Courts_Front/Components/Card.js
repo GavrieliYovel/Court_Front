@@ -58,9 +58,9 @@ const CardTeamListPlayer = ({navigation, children, team}) => {
               <ThemedButton onPress={() => navigation.navigate("TeamForm",{title : team.name, team: team})} style={{marginLeft: 5}} raiseLevel={2} borderRadius={30} activityColor={"darkgreen"} borderColor={"darkgreen"} backgroundColor={"darkseagreen"} width={60} stretch={false} name={"bruce"} type="primary" size={"small"}>
                   <Feather name="edit" size={24} color="black"/>
               </ThemedButton>
-                <ThemedButton  style={{marginLeft: 5}} raiseLevel={2} borderRadius={30} activityColor={"blue"} borderColor={"darkblue"} backgroundColor={"dodgerblue"} width={60} stretch={false} name={"bruce"} type="primary" size={"small"}>
-                    <FontAwesome name="plus" size={24} color="white" />
-                </ThemedButton>
+                {/*<ThemedButton  style={{marginLeft: 5}} raiseLevel={2} borderRadius={30} activityColor={"blue"} borderColor={"darkblue"} backgroundColor={"dodgerblue"} width={60} stretch={false} name={"bruce"} type="primary" size={"small"}>*/}
+                {/*    <FontAwesome name="plus" size={24} color="white" />*/}
+                {/*</ThemedButton>*/}
                 <ThemedButton style={{marginLeft: 5}} raiseLevel={2} borderRadius={30} activityColor={"darkgreen"} borderColor={"darkgreen"} backgroundColor={"tomato"} width={60} stretch={false} name={"bruce"} type="primary" size={"small"}>
                     <MaterialCommunityIcons name="exit-run" size={24} color="black" />
                 </ThemedButton>
