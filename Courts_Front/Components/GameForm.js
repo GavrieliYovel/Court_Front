@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import { RadioButton } from 'react-native-paper';
-import RNPickerSelect from 'react-native-picker-select';
-
-
+// import RNPickerSelect from 'react-native-picker-select';
+import { Picker } from '@react-native-community/picker';
 import {
     SafeAreaView,
     View,
@@ -11,10 +10,16 @@ import {
     TouchableOpacity,
     Image,
     StyleSheet,
+    FlatList,
     Button
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import ConfirmChangesModal from "./ConfirmChngesModal";
+import {StackActions} from "@react-navigation/native";
+import {Input} from "react-native-elements";
+import {MultipleSelectList} from "react-native-dropdown-select-list/index";
+import {ThemedButton} from "react-native-really-awesome-button";
 const styles = StyleSheet.create({
     tinyLogo: {
         width: 300,
@@ -47,12 +52,33 @@ const styles = StyleSheet.create({
         width: 230,
         fontSize: 16,
         color : "#000"
+    },
+    modal: {
+        margin: 20,
+        backgroundColor: 'white',
+        height: 50,
+        width: 50,
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        }
     }
 });
+
+const labelStyle = StyleSheet.create({
+    fontWeight: "bold",
+    color: "black"
+})
+
 export const GameForm = () => {
     const [gameScope, onChangeGameScope] = React.useState('Football');
-    const [gameDuration, onChangeGameDuration] = React.useState('15');
+    const [gameDuration, onChangeGameDuration] = React.useState('default');
     const [date, setDate] = React.useState(new Date());
+    // const [selectedValue, setSelectedValue] = React.useState('15');
     const OnPressSave = () => {
         fetch('https://courts.onrender.com/games/new', {
             method: 'POST',
@@ -70,9 +96,31 @@ export const GameForm = () => {
             .then(data => console.log(data))
             .catch(e => console.log('Could not save the game', e))
     }
+    const playerId = '63c6f3353dbfc677bcb2e871';
+    const [teams, setTeams] = React.useState([]);
+
+    const Item = ({title}) => (
+        <View style={styles.item}>
+            <Text style={styles.title}>{title}</Text>
+        </View>
+    );
+    const TeamsByPlayerList = ({navigation}) => {
+
+        // const [teams, setTeams] = React.useState([]);
+        useEffect(() => {
+            fetch(`https://courts.onrender.com/teams/${playerId}`)
+                .then(response => response.json())
+                .then(data => {
+                    setTeams(data)
+                })
+                .catch(error => console.error('Error:', error));
+        }, []);
+    }
     return (
         <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
-            <View style={{paddingHorizontal: 25}}>
+            <View style={{
+                flex: 1
+            }}>
                 <Text
                     style={{
                         fontSize: 28,
@@ -85,55 +133,29 @@ export const GameForm = () => {
                     Let's create a game!
                 </Text>
 
-                <Text
-                    style={{
-                        fontSize: 12,
-                        fontWeight: '350',
-                        color: '#333',
-                        marginBottom: 5,
-                        marginTop: 5,
-                    }}>
-                    Football
-                </Text>
-                    <RadioButton
-                        value="Football"
-                        status={ gameScope === 'Football' ? 'checked' : 'unchecked' }
-                        onPress={() => onChangeGameScope('Football')}
-                    />
-                <Text
-                    style={{
-                        fontSize: 12,
-                        fontWeight: '500',
-                        color: '#333',
-                        marginBottom: 30,
-                        marginTop: 30,
-                    }}>
-                    Basketball
-                </Text>
-                    <RadioButton
-                        value="Basketball"
-                        status={ gameScope === 'Basketball' ? 'checked' : 'unchecked' }
-                        onPress={() => onChangeGameScope('Basketball')}
-                    />
-
                 <View>
-                    <SafeAreaView style={styles.container}>
-                    {/*<Ionicons*/}
-                    {/*    name="ios-lock-closed-outline"*/}
-                    {/*    size={20}*/}
-                    {/*    // color="#666"*/}
-                    {/*    style={{marginRight: 5}}*/}
-                    {/*/>*/}
-                        <Text
-                            style={{
-                                fontSize: 12,
-                                fontWeight: '500',
-                                color: '#333',
-                                marginBottom: 30,
-                                marginTop: 30,
-                            }}>
-                            Select a date
-                        </Text>
+                    <Text style={labelStyle} marginBottom={5}>Select game's scope:</Text>
+                    <View style={{display: 'flex',flexDirection: 'row'}}>
+                        <Text style={{fontWeight: "bold", color: "black", marginTop:10, width:65}}>Football</Text>
+                        <RadioButton
+                            style={{right:0, width: 10}}
+                            value="Football"
+                            status={ gameScope === 'Football' ? 'checked' : 'unchecked' }
+                            onPress={() => onChangeGameScope('Football')}
+                        />
+                    </View>
+                    <View style={{display: 'flex',flexDirection: 'row'}}>
+                        <Text style={{fontWeight: "bold", color: "black", marginTop:10, width:65}}>Basketball</Text>
+                        <RadioButton
+                            style={{ right:0, width: 10}}
+                            value="Basketball"
+                            status={ gameScope === 'Basketball' ? 'checked' : 'unchecked' }
+                            onPress={() => onChangeGameScope('Basketball')}
+                        />
+                    </View>
+                </View>
+                <View style={{display: 'flex',flexDirection: 'row', marginTop:30}}>
+                    <Text style={labelStyle} width={100}marginRight={10} marginLeft={11}>Select game's date:</Text>
                     <DatePicker
                             style={{width: 200}}
                             date={date}
@@ -144,10 +166,11 @@ export const GameForm = () => {
                             cancelBtnText="Cancel"
                             customStyles={{
                                 dateIcon: {
-                                    position: 'absolute',
-                                    left: 0,
-                                    top: 4,
-                                    marginLeft: 0
+                                    marginRight: 20
+                                    // position: 'absolute',
+                                    // left: 0,
+                                    // top: 4,
+                                    // marginLeft: 0
                                 },
                                 dateInput: {
                                     marginLeft: 36
@@ -155,61 +178,40 @@ export const GameForm = () => {
                             }}
                             onDateChange={(date) => {setDate(date)}}
                     />
-                        <Text
-                            style={{
-                                fontSize: 16,
-                                fontWeight: '500',
-                                color: '#333',
-                                marginBottom: 10,
-                                marginTop: 30,
-                            }}>
-                            Duration of the game?
-                        </Text>
-                        <RNPickerSelect
-                            placeholder={"Duration of the game"}
-                            style={{fontSize: 16,
-                                marginTop: 20,
-                                paddingVertical: 12,
-                                paddingHorizontal: 10,
-                                borderWidth: 1,
-                                borderColor: 'gray',
-                                borderRadius: 4,
-                                color: 'black',
-                                paddingRight: 30}}
-                            itemKey={gameDuration}
-                            onValueChange={(value) => onChangeGameDuration(value)}
-                            items={[
-                                {label:'15', value:"key0"},
-                                {label:"30", value:"key1"},
-                                {label:"45", value:"key2"},
-                                {label:"60", value:"key3"},
-                                {label:"75",value: "key4"},
-                                {label:"90", value:"key5"},
-                                {label:"105", value:"key6"},
-                                {label:"120", value:"key7"},
-                            ]}
-                            customStyles={{
-                                dateIcon: {
-                                    position: 'absolute',
-                                    left: 0,
-                                    top: 4,
-                                    marginLeft: 0
-                                },
-                                dateInput: {
-                                    marginLeft: 36
-                                }
-                            }}
-                        />
-                    </SafeAreaView>
                 </View>
-                <Button
-                    style={{ position: 'absolute',
-                        bottom: 0}}
-                    // onPress={OnPressSave}
-                    title="Save"
-                    color="steelblue"
-                    accessibilityLabel="Save"
-                />
+                <View style={{display: 'flex',flexDirection: 'row', width:'60%',marginTop:30, marginBottom:100}}>
+                    <Text style={labelStyle} marginBottom={5} marginRight={10}>Scroll to select game's duration: (in minutes)</Text>
+                    <Picker
+                        selectedValue={gameDuration}
+                        onValueChange={(itemValue) => onChangeGameDuration(itemValue)}
+                        style={{marginTop: -10,width:100, height: 50}}
+                        prompt={true}
+                        itemStyle={{height:50, fontSize:12}}
+                    >
+                        <Picker.Item label="Scroll" value="default" />
+                        <Picker.Item label="15" value="15" />
+                        <Picker.Item label="30" value="30" />
+                        <Picker.Item label="45" value="45" />
+                        <Picker.Item label="60" value="60" />
+                        <Picker.Item label="75" value="75" />
+                        <Picker.Item label="90" value="90" />
+                        <Picker.Item label="105" value="105" />
+                        <Picker.Item label="120" value="120" />
+                    </Picker>
+                </View>
+                <View style={{display: 'flex',flexDirection: 'row', width:'60%',marginTop:30, marginBottom:100}}>
+                    <Text style={labelStyle} marginBottom={5} marginRight={10}>Select game's team:</Text>
+                    <FlatList
+                        data={TeamsByPlayerList}
+                        // renderItem={({item}) => <Item title={item.title} />}
+                        // keyExtractor={item => item.id}
+                        // ItemSeparatorComponent={renderSeparatorView}
+                        // refreshing={!loading}
+                        // ListFooterComponent={FooterButtons}
+                    />
+                </View>
+                <ThemedButton style={{marginHorizontal: 70, marginVertical: 10}} stretch={false} name={"bruce"}
+                              type="primary" size={"large"} onPress={OnPressSave}>Submit</ThemedButton>
             </View>
         </SafeAreaView>
     )
