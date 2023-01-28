@@ -19,11 +19,13 @@ import moment from "moment";
 import { ThemedButton } from 'react-native-really-awesome-button';
 import {useSelector} from "react-redux";
 import {selectUser} from "../features/userSlice";
+import {useIsFocused} from "@react-navigation/native";
 
-export const CourtModal = ({ modalVisible, markerData, onClose }) => {
+export const CourtModal = ({ navigation, modalVisible, markerData, onClose }) => {
     const user = useSelector(selectUser);
     const [inTeam, setInTeam] = useState([]);
     const [inDate, setInDate] = useState(Date(Date.now()));
+    const isFocused = useIsFocused();
 
 
     const getInTeam =  (playerID) => {
@@ -68,7 +70,7 @@ export const CourtModal = ({ modalVisible, markerData, onClose }) => {
 
     useEffect(() => {
         getInTeam(user.userID);
-    }, []);
+    }, [isFocused]);
     //const checkInTeam
     const Item = ({scope, gameDate, endDate, teamID, inGame }) => {
         const start = moment(gameDate).format("HH:mm A");
@@ -80,7 +82,7 @@ export const CourtModal = ({ modalVisible, markerData, onClose }) => {
             return(
                 <View style={styles.item}>
                     <Text>{date}</Text>
-                    <Text>{scope}</Text>
+                    <Text>Playing: {scope}</Text>
                     <Text style={{marginBottom: 5}} >{start}-{end}</Text>
                     { inTeam.find(team => team._id == teamID)?
                         <ThemedButton
@@ -97,7 +99,6 @@ export const CourtModal = ({ modalVisible, markerData, onClose }) => {
                 </View>
             );
         }
-
     }
 
     return (
@@ -137,7 +138,10 @@ export const CourtModal = ({ modalVisible, markerData, onClose }) => {
             {/*</TouchableOpacity>*/}
 
 
-            <ThemedButton name="bruce" type="primary" size="small">Create Game</ThemedButton>
+            <ThemedButton name="bruce" type="primary" size="small" onPress={() => {
+                onClose();
+                navigation.navigate('GameForm', {courtID: markerData._id});}
+            }>Create Game</ThemedButton>
         </SafeAreaView>
         </Modal>
     );

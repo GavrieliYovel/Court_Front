@@ -9,7 +9,7 @@ import { Provider, useDispatch, useSelector } from 'react-redux'
 import { store } from './store'
 import {selectUser} from "./features/userSlice";
 import {RegisterStack} from './Nevigation/RegistrationStack'
-
+import {GameForm} from './Components/GameForm'
 function App() {
     const user = useSelector(selectUser);
     const [isLoggedIn, setIsLoggedIn] = useState(false);

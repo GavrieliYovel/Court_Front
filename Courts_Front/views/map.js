@@ -9,13 +9,15 @@ import MapViewDirections from "react-native-maps-directions";
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 import {CourtModal} from '../Components/courtModal';
+import {useIsFocused} from "@react-navigation/native";
 
-export const Map = () => {
+export const Map = ({navigation}) => {
     const [courts, setCourts] = useState([]);
     const [location, setLocation] = useState({});
     const [modalVisible, setModalVisible] = useState(false);
     const [markerData, setMarkerData] = useState({});
     const [selectedLocation, setSelectedLocation] = useState({});
+    const isFocused = useIsFocused();
 
     const getCourtPins = () => {
         fetch("https://courts.onrender.com/courts")
@@ -44,7 +46,7 @@ export const Map = () => {
             }
         })();
 
-    }, []);
+    }, [isFocused]);
 
     return (
         <MapView
@@ -79,6 +81,7 @@ export const Map = () => {
                         modalVisible={modalVisible}
                         markerData={markerData}
                         onClose={() => setModalVisible(false)}
+                        navigation={navigation}
                     />
                 </Marker>
             )):[]}
