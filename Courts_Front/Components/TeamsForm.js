@@ -8,8 +8,10 @@ import updateTeam from "../Fetches/updateTeam";
 import getAllUsers from "../Fetches/getAllUsers";
 import DropDownPicker from 'react-native-dropdown-picker';
 import users from "../StatitcDatatForTest/users";
+import {useSelector} from "react-redux";
+import {selectUser} from "../features/userSlice";
 
-const playerId = '63c6f3353dbfc677bcb2e871';
+// const playerId = '63c6f3353dbfc677bcb2e871';
 const teamDefault = {
     _id: null,
     name: "Team Name",
@@ -23,7 +25,7 @@ const labelStyle = StyleSheet.create({
 })
 
 const TeamForm = ({navigation, route}) => {
-
+    const user = useSelector(selectUser);
     let isNewTeam = false;
     const setNewTeam = () => {
         isNewTeam = true;
@@ -48,11 +50,11 @@ const TeamForm = ({navigation, route}) => {
     }, [])
 
     useEffect(() => {
-        setPlayers(allUsers.map((user) => {
-            const isDisabled = playerId === user._id;
+        setPlayers(allUsers.map((User) => {
+            const isDisabled = user.userID === User._id;
             return Object({
-                label: user.name,
-                value: user._id,
+                label: User.name,
+                value: User._id,
                 disabled: isDisabled
             })
         }))

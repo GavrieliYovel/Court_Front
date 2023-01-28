@@ -4,6 +4,9 @@ import styled from 'styled-components/native';
 import {CardTeamsToJoin} from "./Card";
 import {allTeamsData} from "../StatitcDatatForTest/allTeamsData"
 import {ThemedButton} from 'react-native-really-awesome-button';
+import {useSelector} from "react-redux";
+import {selectUser} from "../features/userSlice";
+import {useIsFocused} from "@react-navigation/native";
 
 const StyledViewForPlayers = styled(View)`
   background-color: black;
@@ -12,20 +15,21 @@ const StyledViewForPlayers = styled(View)`
   margin: 5px 3px 5px 3px;
 `;
 const TeamsJoinScreen = ({ navigation, playerId}) => {
-
+    const user = useSelector(selectUser);
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(false);
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         setLoading(true);
-        fetch(`https://courts.onrender.com/teams/noplayer/${playerId}`)
+        fetch(`https://courts.onrender.com/teams/noplayer/${user.userID}`)
             .then(response => response.json())
             .then(data => {
                 setTeams(data);
                 setLoading(false);
             })
             .catch(error => console.error('Error:', error));
-    }, []);
+    }, [isFocused]);
 
     // useEffect(()=>{
     //     setTeams(allTeamsData);
@@ -78,13 +82,13 @@ const TeamsJoinScreen = ({ navigation, playerId}) => {
                 top: 300,
                 bottom: 0,
             }} size={150} color="black"/>
-            <FlatList
+            {!loading && <FlatList
                 data={teams}
                 renderItem={renderItem}
                 keyExtractor={item => item._id?.toString()}
                 ItemSeparatorComponent={renderSeparatorView}
                 refreshing={!loading}
-            />
+            />}
 
 
         </View>

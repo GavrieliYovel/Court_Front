@@ -95,8 +95,6 @@ export const RegisterScreen = ({navigation}) => {
             console.log('password do match')
         }
 
-
-
     }
     return (
         <SafeAreaView style={{flex: 1, justifyContent: 'center',backgroundColor:"white"}}>
@@ -107,7 +105,6 @@ export const RegisterScreen = ({navigation}) => {
                         source={require('../assets/icon.jpeg')}
                     />
                 </View>
-
                 <Text
                     style={{
                         fontSize: 28,

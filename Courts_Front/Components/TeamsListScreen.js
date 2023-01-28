@@ -5,6 +5,8 @@ import {CardTeamListPlayer} from "./Card";
 import {ThemedButton,} from 'react-native-really-awesome-button';
 import seedrandom from 'seedrandom';
 import {useIsFocused} from "@react-navigation/native";
+import {useSelector} from "react-redux";
+import {selectUser} from "../features/userSlice";
 
 
 function idToColor(id) {
@@ -36,17 +38,17 @@ const StyledViewForPlayers = styled(View)`
   border-radius: 7px;
   margin: 5px 3px 5px 3px;
 `;
-const playerId = '63c6f3353dbfc677bcb2e871'
+// const playerId = '63c6f3353dbfc677bcb2e871'
 
 const TeamsByPlayerList = ({navigation}) => {
-
+    const user = useSelector(selectUser);
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(false);
-    const isFocused = useIsFocused()
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         setLoading(true);
-        fetch(`https://courts.onrender.com/teams/${playerId}`)
+        fetch(`https://courts.onrender.com/teams/${user.userID}`)
             .then(response => response.json())
             .then(data => {
                 setTeams(data)
@@ -101,7 +103,7 @@ const TeamsByPlayerList = ({navigation}) => {
                     <ThemedButton style={{marginHorizontal: 70, marginVertical: 10}} stretch={false} name={"bruce"}
                                   type="secondary" size={"large"}>New Team</ThemedButton>}
                 {!loading && <ThemedButton style={{marginHorizontal: 70, marginBottom: 20}} stretch={false} name={"bruce"} type="primary"
-                                            onPress={()=>{navigation.navigate("OtherTeams",{playerId: playerId})}} size={"large"}>Join Team</ThemedButton>}
+                                            onPress={()=>{navigation.navigate("OtherTeams",{playerId: user.userID})}} size={"large"}>Join Team</ThemedButton>}
             </View>)
     }
 
