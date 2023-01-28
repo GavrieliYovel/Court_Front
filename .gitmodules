@@ -1,0 +1,3 @@
+[submodule "Courts_Front/Courts_Front"]
+	path = Courts_Front/Courts_Front
+	url = https://github.com/GavrieliYovel/Court_Front.git
