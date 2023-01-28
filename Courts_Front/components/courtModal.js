@@ -72,7 +72,7 @@ export const CourtModal = ({ navigation, modalVisible, markerData, onClose }) =>
         getInTeam(user.userID);
     }, [isFocused]);
     //const checkInTeam
-    const Item = ({scope, gameDate, endDate, teamID, inGame }) => {
+    const Item = ({scope, gameDate, endDate, teamID, teamName }) => {
         const start = moment(gameDate).format("HH:mm A");
         const end = moment(endDate).format("HH:mm A");
         const date = moment(gameDate).format("DD-MM-YYYY");
@@ -82,6 +82,7 @@ export const CourtModal = ({ navigation, modalVisible, markerData, onClose }) =>
             return(
                 <View style={styles.item}>
                     <Text>{date}</Text>
+                    <Text>Team: {teamName}</Text>
                     <Text>Playing: {scope}</Text>
                     <Text style={{marginBottom: 5}} >{start}-{end}</Text>
                     { inTeam.find(team => team._id == teamID)?
@@ -128,7 +129,8 @@ export const CourtModal = ({ navigation, modalVisible, markerData, onClose }) =>
                     scope={item.scope}
                     gameDate={item.gameDate}
                     endDate={item.endDate}
-                    teamID={item.team}
+                    teamID={item.team._id}
+                    teamName={item.team.name}
                     inGame={false}
                                                 />}
                 keyExtractor={item => item._id}
@@ -140,7 +142,7 @@ export const CourtModal = ({ navigation, modalVisible, markerData, onClose }) =>
 
             <ThemedButton name="bruce" type="primary" size="small" onPress={() => {
                 onClose();
-                navigation.navigate('GameForm', {courtID: markerData._id});}
+                navigation.navigate('GameForm', {courtID: markerData._id, scope: markerData.scope});}
             }>Create Game</ThemedButton>
         </SafeAreaView>
         </Modal>
