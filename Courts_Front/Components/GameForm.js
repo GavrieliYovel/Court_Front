@@ -1,7 +1,7 @@
 import React, {Component, useEffect, useState} from 'react';
 import { RadioButton } from 'react-native-paper';
-// import RNPickerSelect from 'react-native-picker-select';
 import { Picker } from '@react-native-community/picker';
+import allTeamsData from '../StatitcDatatForTest/allTeamsData';
 import {
     SafeAreaView,
     View,
@@ -76,9 +76,9 @@ const labelStyle = StyleSheet.create({
 
 export const GameForm = () => {
     const [gameScope, onChangeGameScope] = React.useState('Football');
-    const [gameDuration, onChangeGameDuration] = React.useState('default');
+    const [gameDuration, onChangeGameDuration] = React.useState('15');
     const [date, setDate] = React.useState(new Date());
-    // const [selectedValue, setSelectedValue] = React.useState('15');
+    const [selectedTeam, onChangeTeams] = React.useState('');
     const OnPressSave = () => {
         fetch('https://courts.onrender.com/games/new', {
             method: 'POST',
@@ -98,24 +98,35 @@ export const GameForm = () => {
     }
     const playerId = '63c6f3353dbfc677bcb2e871';
     const [teams, setTeams] = React.useState([]);
+    useEffect(()=>{
+        fetch(`https://courts.onrender.com/teams/${playerId}`).then(response => response.json())
+            .then(data => {
+                setTeams(data)
+            })
+            .catch(error => console.error('Error:', error));
+    },[])
 
-    const Item = ({title}) => (
-        <View style={styles.item}>
-            <Text style={styles.title}>{title}</Text>
-        </View>
-    );
-    const TeamsByPlayerList = ({navigation}) => {
-
-        // const [teams, setTeams] = React.useState([]);
-        useEffect(() => {
-            fetch(`https://courts.onrender.com/teams/${playerId}`)
-                .then(response => response.json())
-                .then(data => {
-                    setTeams(data)
-                })
-                .catch(error => console.error('Error:', error));
-        }, []);
+    const renderItem = ({item}) => {
+        let names=[];
+        item.players.forEach( (player)=> {
+            names.push(player.name);
+        })
+        return (
+            <View style={{display:'flex', flexDirection:'row', width:'100%'}}>
+                <View>
+                    <Text style={{fontWeight: 'bold', marginTop:10}}>{item.name} </Text>
+                    <Text style={{marginTop:10}}>Team's players: {names+ ' '}</Text>
+                </View>
+                <RadioButton
+                    style={{width:20, height:'100%'}}
+                    value={item._id}
+                    status={ selectedTeam === item.name ? 'checked' : 'unchecked' }
+                    onPress={() => onChangeTeams(item.name)}
+                />
+            </View>
+        );
     }
+
     return (
         <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
             <View style={{
@@ -136,7 +147,7 @@ export const GameForm = () => {
                 <View>
                     <Text style={labelStyle} marginBottom={5}>Select game's scope:</Text>
                     <View style={{display: 'flex',flexDirection: 'row'}}>
-                        <Text style={{fontWeight: "bold", color: "black", marginTop:10, width:65}}>Football</Text>
+                        <Text style={{color: "black", marginTop:10, width:65}}>Football</Text>
                         <RadioButton
                             style={{right:0, width: 10}}
                             value="Football"
@@ -145,7 +156,7 @@ export const GameForm = () => {
                         />
                     </View>
                     <View style={{display: 'flex',flexDirection: 'row'}}>
-                        <Text style={{fontWeight: "bold", color: "black", marginTop:10, width:65}}>Basketball</Text>
+                        <Text style={{color: "black", marginTop:10, width:65}}>Basketball</Text>
                         <RadioButton
                             style={{ right:0, width: 10}}
                             value="Basketball"
@@ -167,10 +178,6 @@ export const GameForm = () => {
                             customStyles={{
                                 dateIcon: {
                                     marginRight: 20
-                                    // position: 'absolute',
-                                    // left: 0,
-                                    // top: 4,
-                                    // marginLeft: 0
                                 },
                                 dateInput: {
                                     marginLeft: 36
@@ -179,8 +186,8 @@ export const GameForm = () => {
                             onDateChange={(date) => {setDate(date)}}
                     />
                 </View>
-                <View style={{display: 'flex',flexDirection: 'row', width:'60%',marginTop:30, marginBottom:100}}>
-                    <Text style={labelStyle} marginBottom={5} marginRight={10}>Scroll to select game's duration: (in minutes)</Text>
+                <View style={{display: 'flex',flexDirection: 'row', width:'100%',marginTop:30, marginBottom:50}}>
+                    <Text style={labelStyle} marginBottom={5} marginRight={10}>Select game's duration: (in minutes)</Text>
                     <Picker
                         selectedValue={gameDuration}
                         onValueChange={(itemValue) => onChangeGameDuration(itemValue)}
@@ -188,7 +195,6 @@ export const GameForm = () => {
                         prompt={true}
                         itemStyle={{height:50, fontSize:12}}
                     >
-                        <Picker.Item label="Scroll" value="default" />
                         <Picker.Item label="15" value="15" />
                         <Picker.Item label="30" value="30" />
                         <Picker.Item label="45" value="45" />
@@ -199,15 +205,13 @@ export const GameForm = () => {
                         <Picker.Item label="120" value="120" />
                     </Picker>
                 </View>
-                <View style={{display: 'flex',flexDirection: 'row', width:'60%',marginTop:30, marginBottom:100}}>
-                    <Text style={labelStyle} marginBottom={5} marginRight={10}>Select game's team:</Text>
+                <View style={{width:'100%',marginTop:30, marginBottom:30}}>
+                    <Text style={labelStyle} marginRight={10}>Select game's team:</Text>
                     <FlatList
-                        data={TeamsByPlayerList}
-                        // renderItem={({item}) => <Item title={item.title} />}
-                        // keyExtractor={item => item.id}
-                        // ItemSeparatorComponent={renderSeparatorView}
-                        // refreshing={!loading}
-                        // ListFooterComponent={FooterButtons}
+                        style={{marginLeft:10, width:'100%'}}
+                        data={teams}
+                        renderItem={renderItem}
+                        keyExtractor={item => item}
                     />
                 </View>
                 <ThemedButton style={{marginHorizontal: 70, marginVertical: 10}} stretch={false} name={"bruce"}
