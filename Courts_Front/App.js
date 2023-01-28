@@ -1,18 +1,32 @@
 import {StatusBar} from 'expo-status-bar';
-import {StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import Navbar from "./Components/Navbar";
 import {NavigationContainer} from '@react-navigation/native';
+import {useState} from "react";
+import { LoginScreen } from "./views/loginPage"
+import { Provider, useDispatch, useSelector } from 'react-redux'
+import { store } from './store'
+import {selectUser} from "./features/userSlice";
 
 
-export default function App() {
+function App() {
+    const user = useSelector(selectUser);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     return (
-        // <View style={styles.container}>
-        //   <Text>Hello Pe'er</Text>
-        //   <StatusBar style="auto" />
-        // </View>
-        <NavigationContainer>
-            <Navbar/>
-        </NavigationContainer>
+            <NavigationContainer>
+
+                {user.userID &&  <Navbar/>}
+                {!user.userID &&  <LoginScreen/>}
+
+            </NavigationContainer>
+    );
+}
+
+export default function Main() {
+    return (
+        <Provider store={store}>
+            <App />
+        </Provider>
     );
 }
 

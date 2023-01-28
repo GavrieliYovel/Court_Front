@@ -9,7 +9,7 @@ import {
     FlatList,
     Button,
     Dimensions,
-    ScrollView
+    ScrollView, SafeAreaView
 } from 'react-native';
 import * as Location from "expo-location";
 import {Marker} from "react-native-maps";
@@ -17,9 +17,11 @@ const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 import moment from "moment";
 import { ThemedButton } from 'react-native-really-awesome-button';
+import {useSelector} from "react-redux";
+import {selectUser} from "../features/userSlice";
 
-const playerID = '63c6f00322c07481efcd1960';
 export const CourtModal = ({ modalVisible, markerData, onClose }) => {
+    const user = useSelector(selectUser);
     const [inTeam, setInTeam] = useState([]);
     const [inDate, setInDate] = useState(Date(Date.now()));
 
@@ -34,7 +36,7 @@ export const CourtModal = ({ modalVisible, markerData, onClose }) => {
     }
     const JoinTeam =  (teamID) => {
         console.log(teamID);
-         fetch(`https://courts.onrender.com/teams/player/${teamID}/${playerID}`, {
+         fetch(`https://courts.onrender.com/teams/player/${teamID}/${user.userID}`, {
             method: 'PUT',
             headers: {
                 Accept: 'application/json',
@@ -43,14 +45,14 @@ export const CourtModal = ({ modalVisible, markerData, onClose }) => {
         })
             .then(data => {
                 console.log('added')
-                getInTeam(playerID);
+                getInTeam(user.userID);
             })
             .catch(err => console.error(err));
     }
 
     const LeaveTeam =  (teamID) => {
         console.log(teamID);
-         fetch(`https://courts.onrender.com/teams/player/${teamID}/${playerID}`, {
+         fetch(`https://courts.onrender.com/teams/player/${teamID}/${user.userID}`, {
             method: 'DELETE',
             headers: {
                 Accept: 'application/json',
@@ -59,13 +61,13 @@ export const CourtModal = ({ modalVisible, markerData, onClose }) => {
         })
             .then(data => {
                 console.log('Deleted');
-                getInTeam(playerID);
+                getInTeam(user.userID);
             })
             .catch(err => console.error(err));
     }
 
     useEffect(() => {
-        getInTeam(playerID);
+        getInTeam(user.userID);
     }, []);
     //const checkInTeam
     const Item = ({scope, gameDate, endDate, teamID, inGame }) => {
@@ -103,7 +105,7 @@ export const CourtModal = ({ modalVisible, markerData, onClose }) => {
             transparent={false}
             visible={modalVisible}
         >
-        <View style={styles.modalContainer}>
+        <SafeAreaView style={styles.modalContainer}>
             <View style={{display:"flex", flexDirection:"row", justifyContent: "space-between", alignSelf:"flex-start", width:"100%"}}>
                 <View>
                     <Text style={styles.title}>{markerData?.name}</Text>
@@ -136,7 +138,7 @@ export const CourtModal = ({ modalVisible, markerData, onClose }) => {
 
 
             <ThemedButton name="bruce" type="primary" size="small">Create Game</ThemedButton>
-        </View>
+        </SafeAreaView>
         </Modal>
     );
 };

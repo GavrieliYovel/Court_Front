@@ -12,8 +12,9 @@ import {
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
-import InputField from '../components/inputField';
+import {getUser, selectUser} from '../features/userSlice';
+import {store} from "../store";
+import {useSelector} from "react-redux";
 
 const styles = StyleSheet.create({
     tinyLogo: {
@@ -32,6 +33,10 @@ const styles = StyleSheet.create({
 export const LoginScreen = () => {
     const [email, onChangeEmail] = React.useState('');
     const [password, onChangePassword] = React.useState('');
+    const user = useSelector(selectUser);
+    const handleLogin = (userID, name) => {
+        store.dispatch(getUser({ userID, name }));
+    }
     const onPressLogin = () => {
         console.log('clicked');
         fetch('https://courts.onrender.com/users/login', {
@@ -46,7 +51,10 @@ export const LoginScreen = () => {
             })
         })
             .then(response => response.json())
-            .then(data => console.log(data))
+            .then(data => {
+                handleLogin(data._id, data.name);
+                console.log(user);
+            } )
             .catch(e => console.log('login fail'))
     }
     return (
