@@ -4,7 +4,7 @@ import {Card} from 'react-native-elements';
 import styled from 'styled-components/native';
 import {Feather, FontAwesome, MaterialCommunityIcons} from "@expo/vector-icons";
 import ThemedButton from "react-native-really-awesome-button/src/themed/ThemedButton";
-
+import ConfirmChangesModal from "./ConfirmChngesModal";
 
 
 const StyledCard = styled(Card.Divider)`
@@ -61,7 +61,7 @@ const CardTeamListPlayer = ({navigation, children, team}) => {
                 {/*<ThemedButton  style={{marginLeft: 5}} raiseLevel={2} borderRadius={30} activityColor={"blue"} borderColor={"darkblue"} backgroundColor={"dodgerblue"} width={60} stretch={false} name={"bruce"} type="primary" size={"small"}>*/}
                 {/*    <FontAwesome name="plus" size={24} color="white" />*/}
                 {/*</ThemedButton>*/}
-                <ThemedButton style={{marginLeft: 5}} raiseLevel={2} borderRadius={30} activityColor={"darkgreen"} borderColor={"darkgreen"} backgroundColor={"tomato"} width={60} stretch={false} name={"bruce"} type="primary" size={"small"}>
+                <ThemedButton onPress={} style={{marginLeft: 5}} raiseLevel={2} borderRadius={30} activityColor={"darkgreen"} borderColor={"darkgreen"} backgroundColor={"tomato"} width={60} stretch={false} name={"bruce"} type="primary" size={"small"}>
                     <MaterialCommunityIcons name="exit-run" size={24} color="black" />
                 </ThemedButton>
             </ButtonContainer>
