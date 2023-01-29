@@ -11,14 +11,13 @@ import AgendaItem from "../Components/AgendaItem";
 
 const GamesHome = () => {
     const user = useSelector(selectUser);
-    const [render, setRender] = useState(false);
+
     const [playerGames, setPlayerGames] = useState({});
 
 
     const isFocused = useIsFocused();
 
     useEffect( () => {
-        setRender(!render);
         getGamesByPlayerId(user.userID).then((games) =>{
              games.forEach((game)=>{
                     console.log(game.gameDate)
@@ -28,13 +27,14 @@ const GamesHome = () => {
             const gameDate = new Date(game.gameDate).toISOString().split('T')[0];
             const gameStartTime = new Date(game.gameDate).toISOString().split('T')[1];
             const gameEndTime = new Date(game.endDate).toISOString().split('T')[1];
-            accumulator[`${gameDate}`] = [{
+            const newObjToPush = {
                 name: 'test',
                 startTime: gameStartTime,
                 endTime: gameEndTime,
                 team: game.team,
                 type: game.scope
-            }];
+            }
+            accumulator[gameDate] = [...(accumulator[gameDate] || []), newObjToPush];
             return accumulator
 
         }, obj);}
@@ -45,7 +45,7 @@ const GamesHome = () => {
 
     return (
         <CalendarProvider date={new Date().toDateString()}>
-            <Agenda showOnlySelectedDayItems={true} items={playerGames} renderItem={AgendaItem} />
+            <Agenda showOnlySelectedDayItems={false} items={playerGames} renderItem={AgendaItem} />
         </CalendarProvider>
 
     )
