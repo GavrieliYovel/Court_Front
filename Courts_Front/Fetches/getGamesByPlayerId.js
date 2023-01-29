@@ -1,7 +1,7 @@
 const getGamesByPlayerId = async (playerId) => {
     let games;
 
-    await fetch(`https://courts.onrender.com/games/${playerId}`, {
+     await fetch(`https://courts.onrender.com/games/${playerId}`, {
             mode: 'cors',
             headers: {
                 'Content-Type': 'application/json'
@@ -10,7 +10,6 @@ const getGamesByPlayerId = async (playerId) => {
     )
         .then(response => response.json())
         .then(data => {
-
             games = data;
         }).catch(err => console.log(err));
 

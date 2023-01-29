@@ -6,6 +6,7 @@ import {selectUser} from "../features/userSlice";
 import getGamesByPlayerId from "../Fetches/getGamesByPlayerId";
 import {Text} from "react-native";
 import {useIsFocused} from "@react-navigation/native";
+import AgendaItem from "../Components/AgendaItem";
 
 
 const GamesHome = () => {
@@ -16,28 +17,35 @@ const GamesHome = () => {
 
     const isFocused = useIsFocused();
 
-    useEffect(async () => {
+    useEffect( () => {
         setRender(!render);
-        const games = await getGamesByPlayerId(user.userID);
-        const obj = {};
-        const reducedGames = games.reduce((accumulator, game) => {
+        getGamesByPlayerId(user.userID).then((games) =>{
+             games.forEach((game)=>{
+                    console.log(game.gameDate)
+                })
+        let obj = {};
+        return  games.reduce((accumulator, game) => {
             const gameDate = new Date(game.gameDate).toISOString().split('T')[0];
-            accumulator[gameDate] = {name: 'test'};
-        }, obj);
-        console.log("reduced",reducedGames);
+            const gameStartTime = new Date(game.gameDate).toISOString().split('T')[1];
+            const gameEndTime = new Date(game.endDate).toISOString().split('T')[1];
+            accumulator[`${gameDate}`] = [{
+                name: 'test',
+                startTime: gameStartTime,
+                endTime: gameEndTime,
+                team: game.team,
+                type: game.scope
+            }];
+            return accumulator
+
+        }, obj);}
+        ).then( (reducedGames) => setPlayerGames(reducedGames));
 
     }, [isFocused])
 
 
-    useEffect(()=>{
-        console.log(playerGames)
-    }, [playerGames] )
     return (
         <CalendarProvider date={new Date().toDateString()}>
-            <Text>
-
-            </Text>
-            <Agenda showOnlySelectedDayItems={true} items={playerGames}/>
+            <Agenda showOnlySelectedDayItems={true} items={playerGames} renderItem={AgendaItem} />
         </CalendarProvider>
 
     )
