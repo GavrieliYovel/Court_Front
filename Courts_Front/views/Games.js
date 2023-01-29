@@ -1,4 +1,4 @@
-import {Calendar, CalendarList, WeekCalendar, CalendarProvider} from "react-native-calendars/src/index";
+import {CalendarProvider} from "react-native-calendars/src/index";
 import {Agenda} from "react-native-calendars";
 import React, {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
@@ -8,23 +8,11 @@ import {ActivityIndicator, Text, View} from "react-native";
 import {useIsFocused} from "@react-navigation/native";
 import AgendaItem from "../Components/AgendaItem";
 
-const renderSeparatorView = () => {
-    return (
-        <View style={{
-            height: 1,
-            width: "100%",
-            backgroundColor: "#CEDCCE",
-        }}
-        />
-    );
-};
 
 const GamesHome = () => {
     const user = useSelector(selectUser);
-
     const [playerGames, setPlayerGames] = useState({});
     const [loading, setLoading] = useState(true)
-
     const isFocused = useIsFocused();
 
     useEffect(() => {
@@ -65,7 +53,8 @@ const GamesHome = () => {
                 top: 200,
                 bottom: 0,
             }} size={150} color="black"/>
-            {!loading && <Agenda showOnlySelectedDayItems={false} items={playerGames} renderItem={AgendaItem}
+            {!loading && <Agenda refreshing={loading} showOnlySelectedDayItems={false} items={playerGames}
+                                 renderItem={AgendaItem}
                                  renderEmptyData={() =>
                                      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                                          <Text style={{fontWeight: 'bold'}}>No games this day</Text>

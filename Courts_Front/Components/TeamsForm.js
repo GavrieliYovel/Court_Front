@@ -1,19 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TextInput, ScrollView} from 'react-native';
-import {Input, Button} from 'react-native-elements';
+import {View, Text, ScrollView} from 'react-native';
+import {Input} from 'react-native-elements';
 import {StyleSheet} from "react-native";
 import {ThemedButton} from "react-native-really-awesome-button";
 import ConfirmChangesModal from "./ConfirmChangesModal";
 import updateTeam from "../Fetches/updateTeam";
 import getAllUsers from "../Fetches/getAllUsers";
 import DropDownPicker from 'react-native-dropdown-picker';
-import users from "../StatitcDatatForTest/users";
 import {useSelector} from "react-redux";
 import {selectUser} from "../features/userSlice";
 import createTeam from "../Fetches/createTeam";
-import {KeyboardAvoidingView} from "react-native";
 
-// const playerId = '63c6f3353dbfc677bcb2e871';
 const teamDefault = (playerId) => {
     return Object({
         _id: null,

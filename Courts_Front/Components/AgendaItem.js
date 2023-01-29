@@ -1,8 +1,6 @@
 import {Text, View} from "react-native";
 import styled from "styled-components/native";
 import {Card} from "react-native-elements";
-import ThemedButton from "react-native-really-awesome-button/src/themed/ThemedButton";
-import {FontAwesome} from "@expo/vector-icons";
 import React from "react";
 
 
@@ -21,12 +19,16 @@ const AgendaItem = (item, firstItemInDay) => {
                     <Text>{item.type}</Text>
                 </LabelTextContainer>
                 <LabelTextContainer>
-                    <StyledTitle>Start Time</StyledTitle>
+                    <StyledTitle>Start Time:</StyledTitle>
                     <Text>{item.startTime}</Text>
                 </LabelTextContainer>
                 <LabelTextContainer>
-                    <StyledTitle>End Time</StyledTitle>
+                    <StyledTitle>End Time:</StyledTitle>
                     <Text>{item.endTime}</Text>
+                </LabelTextContainer>
+                <LabelTextContainer>
+                    <StyledTitle>Court:</StyledTitle>
+                    <Text>{item.court}</Text>
                 </LabelTextContainer>
             </StyledView>
         </StyledCard>
@@ -34,10 +36,10 @@ const AgendaItem = (item, firstItemInDay) => {
 }
 
 const LabelTextContainer = styled(View)`
-    flex: 1;
-    width: 100;
-    flex-direction: row;
-    align-items: flex-start;
+  flex: 1;
+  width: 100;
+  flex-direction: row;
+  align-items: flex-start;
 `;
 const StyledCard = styled(Card.Divider)`
   background-color: #F8F9FA;

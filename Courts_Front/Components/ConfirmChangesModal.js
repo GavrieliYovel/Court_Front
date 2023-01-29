@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {View, Text, Modal, Button, StyleSheet, ActivityIndicator} from 'react-native';
-import {Feather, Fontisto, Foundation, MaterialCommunityIcons} from "@expo/vector-icons";
+import {View, Text, Modal, StyleSheet, ActivityIndicator} from 'react-native';
+import {Fontisto, Foundation} from "@expo/vector-icons";
 import ThemedButton from "react-native-really-awesome-button/src/themed/ThemedButton";
 
 const ConfirmChangesModal = ({message, visible, onConfirm, onCancel, loading =false}) => {

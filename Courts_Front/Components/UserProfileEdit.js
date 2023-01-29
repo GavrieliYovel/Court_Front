@@ -1,5 +1,5 @@
 import {Image, SafeAreaView, StyleSheet, TextInput, View} from "react-native";
-import {Caption, Text, Title, TouchableRipple} from "react-native-paper";
+import {Caption, Text, TouchableRipple} from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {useSelector} from "react-redux";
 import {editUser, selectUser} from "../features/userSlice";

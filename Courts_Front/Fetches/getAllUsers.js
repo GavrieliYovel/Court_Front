@@ -10,7 +10,6 @@ const getAllUsers = async () => {
     )
         .then(response => response.json())
          .then(data => {
-
             users = data;
          }).catch(err => console.log(err));
 

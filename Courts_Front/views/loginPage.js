@@ -39,7 +39,6 @@ export const LoginScreen = ({navigation}) => {
         store.dispatch(getUser({ userID, name, email }));
     }
     const onPressLogin = () => {
-        console.log('clicked');
         fetch('https://courts.onrender.com/users/login', {
             method: 'POST',
             headers: {
@@ -54,7 +53,6 @@ export const LoginScreen = ({navigation}) => {
             .then(response => response.json())
             .then(data => {
                 handleLogin(data._id, data.name, data.email);
-                console.log(user);
             } )
             .catch(e => console.log('login fail'))
     }

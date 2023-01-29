@@ -1,6 +1,5 @@
 import {RegisterScreen} from "../views/registerPage";
 import {LoginScreen} from "../views/loginPage";
-
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 
 

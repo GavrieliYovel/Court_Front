@@ -19,9 +19,7 @@ function idToColor(id) {
 
     seedrandom(id, {global: true});
 
-    const c = colors[Math.floor(Math.random() * colors.length)];
-    console.log(c);
-    return c;
+    return colors[Math.floor(Math.random() * colors.length)];
 }
 
 export default idToColor;

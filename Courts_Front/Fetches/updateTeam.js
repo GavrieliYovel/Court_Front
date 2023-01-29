@@ -12,9 +12,7 @@ const updateTeam = async (teamId, updatedTeamData) => {
             teamID: teamId,
             newTeamData: updatedTeamData
         })
-    }).then(response => console.log(response)).catch(err => console.log(err));
+    }).catch(err => console.log(err));
 }
 
-//     return await axios.put('https://courts.onrender.com/teams/edit/',updatedTeamData)
-// };
 export default updateTeam;

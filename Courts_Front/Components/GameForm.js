@@ -1,30 +1,20 @@
 import React, {Component, useEffect, useState} from 'react';
 import { RadioButton } from 'react-native-paper';
 import { Picker } from '@react-native-community/picker';
-import allTeamsData from '../StatitcDatatForTest/allTeamsData';
 import {
-    SafeAreaView,
     View,
     Text,
-    TextInput,
     TouchableOpacity,
-    Image,
     StyleSheet,
     FlatList,
-    Button, Platform
+    Platform
 } from 'react-native';
-import DatePicker from 'react-native-datepicker';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import ConfirmChangesModal from "./ConfirmChangesModal";
-import {StackActions} from "@react-navigation/native";
-import {Input} from "react-native-elements";
-import {MultipleSelectList} from "react-native-dropdown-select-list/index";
 import {ThemedButton} from "react-native-really-awesome-button";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from "moment";
 import {useSelector} from "react-redux";
 import {selectUser} from "../features/userSlice";
-import { useNavigation } from '@react-navigation/native';
+
 
 
 
@@ -90,10 +80,7 @@ export const GameForm = ({navigation, route}) => {
     const user = useSelector(selectUser);
     const [gameScope, onChangeGameScope] = React.useState('');
     const [gameDuration, onChangeGameDuration] = React.useState('15');
-    // const [date, setDate] = React.useState(new Date());
     const [selectedTeam, onChangeTeams] = React.useState('');
-
-    //datetimepicker
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);

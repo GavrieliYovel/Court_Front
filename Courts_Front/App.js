@@ -14,7 +14,6 @@ LogBox.ignoreAllLogs();
 
 function App() {
     const user = useSelector(selectUser);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const RootStack = createNativeStackNavigator()
     return (
         <NavigationContainer>

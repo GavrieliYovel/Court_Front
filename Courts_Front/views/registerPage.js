@@ -12,9 +12,8 @@ import {
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {getUser, selectUser} from '../features/userSlice';
+import {getUser} from '../features/userSlice';
 import {store} from "../store";
-import {useSelector} from "react-redux";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from "moment";
 
@@ -36,20 +35,14 @@ export const RegisterScreen = ({navigation}) => {
     const [email, onChangeEmail] = React.useState('');
     const [password, onChangePassword] = React.useState('');
     const [confirmPassword, onChangeConfirmPassword] = React.useState('');
-
-    //datetimepicker
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [text, setText] = useState('Date of Birth');
-
-    const [phone, onChangePhone] = useState('');
-    const [address, onChangeAddress] = useState('');
     const [name, onChangeName] = useState('');
 
 
     const onChange= (event, selectedDate) => {
-        console.log(selectedDate);
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
         setDate(currentDate);
@@ -58,7 +51,7 @@ export const RegisterScreen = ({navigation}) => {
         let fDate = moment(tempDate).format("DD-MM-YYYY");
         let fTime = moment(tempDate).format("HH:mm A")
         setText(fDate);
-        console.log(fDate);
+
     }
     const showMode = (currentMode) => {
         setShow(true);
@@ -88,7 +81,6 @@ export const RegisterScreen = ({navigation}) => {
                 .then(response => response.json())
                 .then(data => {
                     handleRegister(data._id, data.name, data.email);
-                    console.log(user);
                 } )
                 .catch(e => console.log('login fail'))
         } else {
@@ -207,30 +199,7 @@ export const RegisterScreen = ({navigation}) => {
                         onChange={onChange}
                     />
                 )}
-                {/*<DatePicker*/}
-                {/*    style={{width: 200}}*/}
-                {/*    date={date}*/}
-                {/*    mode="date"*/}
-                {/*    placeholder="select date"*/}
-                {/*    format="YYYY-MM-DD"*/}
-                {/*    minDate="2016-05-01"*/}
-                {/*    maxDate="2016-06-01"*/}
-                {/*    confirmBtnText="Confirm"*/}
-                {/*    cancelBtnText="Cancel"*/}
-                {/*    customStyles={{*/}
-                {/*        dateIcon: {*/}
-                {/*            position: 'absolute',*/}
-                {/*            left: 0,*/}
-                {/*            top: 4,*/}
-                {/*            marginLeft: 0*/}
-                {/*        },*/}
-                {/*        dateInput: {*/}
-                {/*            marginLeft: 36*/}
-                {/*        }*/}
-                {/*        // ... You can check the source to find the other keys.*/}
-                {/*    }}*/}
-                {/*    onDateChange={(date) => setDate(date)}*/}
-                {/*/>*/}
+
                 <Button
                     onPress={onPressRegister}
                     title="Register"

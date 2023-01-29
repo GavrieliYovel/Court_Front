@@ -1,12 +1,10 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Map} from '../views/map'
-import {Ionicons, FontAwesome5, FontAwesome, AntDesign } from "@expo/vector-icons";
-
+import {FontAwesome5, FontAwesome, AntDesign } from "@expo/vector-icons";
 import {User, CourtsLogo, HeaderButtons} from "./Header";
-
 import TeamStack from "../Nevigation/TeamStack";
-
 import GamesStack from "../Nevigation/GamesStack";
+import {GameStack} from "../Nevigation/GameStack";
 
 
 const iconMap = {
@@ -40,31 +38,18 @@ export default function Navbar({navigation}) {
     }
 
     return (
-        // <NavigationContainer>
             <Tab.Navigator
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
                         return iconMap[route.name](focused, color);
-                        //
-                        // if (route.name === 'Map') {
-                        //     iconName = focused
-                        //         ? 'ios-information-circle'
-                        //         : 'ios-information-circle-outline';
-                        // } else if (route.name === 'Settings') {
-                        //     iconName = focused ? 'ios-list' : 'ios-list-outline';
-                        // }
-
-                        // You can return any component that you like here!
                     },
                     tabBarActiveTintColor: 'black',
                     tabBarInactiveTintColor: 'grey',
                 })}
             >
-                <Tab.Screen name="Map" component={Map} options={HeaderOptions}/>
+                <Tab.Screen name="Map" component={GameStack} options={HeaderOptions}/>
                 <Tab.Screen name="Games" component={GamesStack} options={HeaderOptions}/>
-                {/*<Tab.Screen name="Teams" children= {() => <TeamsListScreen playerId={'63c6f3353dbfc677bcb2e871'}/>} options={HeaderOptions}/>*/}
                 <Tab.Screen name="Teams" component={TeamStack} options={HeaderOptions}/>
             </Tab.Navigator>
-        // </NavigationContainer>
     );
 }

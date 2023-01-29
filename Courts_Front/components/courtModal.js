@@ -2,34 +2,29 @@ import React, {useEffect, useState} from 'react';
 import {
     View,
     Text,
-    TouchableOpacity,
     StyleSheet,
     Modal,
-    Image,
     FlatList,
-    Button,
     Dimensions,
-    ScrollView, SafeAreaView
+    SafeAreaView
 } from 'react-native';
-import * as Location from "expo-location";
-import {Marker} from "react-native-maps";
+
 const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
 import moment from "moment";
-import { ThemedButton } from 'react-native-really-awesome-button';
+import {ThemedButton} from 'react-native-really-awesome-button';
 import {useSelector} from "react-redux";
 import {selectUser} from "../features/userSlice";
 import {useIsFocused} from "@react-navigation/native";
-import logBoxInspectorFooter from "react-native/Libraries/LogBox/UI/LogBoxInspectorFooter";
 
-export const CourtModal = ({ navigation, modalVisible, markerData, onClose, onNavigation, nav }) => {
+
+export const CourtModal = ({navigation, modalVisible, markerData, onClose, onNavigation, nav}) => {
     const user = useSelector(selectUser);
     const [inTeam, setInTeam] = useState([]);
     const [inDate, setInDate] = useState(Date(Date.now()));
     const isFocused = useIsFocused();
 
 
-    const getInTeam =  (playerID) => {
+    const getInTeam = (playerID) => {
         fetch(`https://courts.onrender.com/teams/${playerID}`)
             .then(response => response.json())
             .then(data => {
@@ -37,9 +32,8 @@ export const CourtModal = ({ navigation, modalVisible, markerData, onClose, onNa
             })
             .catch(err => console.error(err));
     }
-    const JoinTeam =  (teamID) => {
-        console.log(teamID);
-         fetch(`https://courts.onrender.com/teams/player/${teamID}/${user.userID}`, {
+    const JoinTeam = (teamID) => {
+        fetch(`https://courts.onrender.com/teams/player/${teamID}/${user.userID}`, {
             method: 'PUT',
             headers: {
                 Accept: 'application/json',
@@ -47,15 +41,13 @@ export const CourtModal = ({ navigation, modalVisible, markerData, onClose, onNa
             },
         })
             .then(data => {
-                console.log('added')
                 getInTeam(user.userID);
             })
             .catch(err => console.error(err));
     }
 
-    const LeaveTeam =  (teamID) => {
-        console.log(teamID);
-         fetch(`https://courts.onrender.com/teams/player/${teamID}/${user.userID}`, {
+    const LeaveTeam = (teamID) => {
+        fetch(`https://courts.onrender.com/teams/player/${teamID}/${user.userID}`, {
             method: 'DELETE',
             headers: {
                 Accept: 'application/json',
@@ -72,29 +64,31 @@ export const CourtModal = ({ navigation, modalVisible, markerData, onClose, onNa
     useEffect(() => {
         getInTeam(user.userID);
     }, [isFocused]);
-    //const checkInTeam
-    const Item = ({scope, gameDate, endDate, teamID, teamName }) => {
+    const Item = ({scope, gameDate, endDate, teamID, teamName}) => {
         const start = moment(gameDate).format("HH:mm A");
         const end = moment(endDate).format("HH:mm A");
         const date = moment(gameDate).format("DD-MM-YYYY");
 
-        // console.log(teamID);
-        if(date == moment(inDate).format("DD-MM-YYYY")) {
-            return(
+        if (date == moment(inDate).format("DD-MM-YYYY")) {
+            return (
                 <View style={styles.item}>
                     <Text>{date}</Text>
                     <Text>Team: {teamName}</Text>
                     <Text>Playing: {scope}</Text>
-                    <Text style={{marginBottom: 5}} >{start}-{end}</Text>
-                    { inTeam.find(team => team._id == teamID)?
+                    <Text style={{marginBottom: 5}}>{start}-{end}</Text>
+                    {inTeam.find(team => team._id == teamID) ?
                         <ThemedButton
-                            onPress={ () => { LeaveTeam(teamID)}}
+                            onPress={() => {
+                                LeaveTeam(teamID)
+                            }}
                             name="bruce"
                             type="secondary"
-                        >Leave Team</ThemedButton>:
+                        >Leave Team</ThemedButton> :
                         <ThemedButton
                             name="bruce"
-                            onPress={ () => {JoinTeam(teamID)}}
+                            onPress={() => {
+                                JoinTeam(teamID)
+                            }}
                             type="primary"
                         >Join Team</ThemedButton>}
 
@@ -108,60 +102,64 @@ export const CourtModal = ({ navigation, modalVisible, markerData, onClose, onNa
             transparent={false}
             visible={modalVisible}
         >
-        <SafeAreaView style={styles.modalContainer}>
-            <View style={{display:"flex", flexDirection:"row", justifyContent: "space-between", alignSelf:"flex-start", width:"100%"}}>
-                <View>
-                    <Text style={styles.title}>{markerData?.name}</Text>
-                    <Text>{markerData?.city}</Text>
-                    <Text>{markerData?.scope?.join(", ")}</Text>
+            <SafeAreaView style={styles.modalContainer}>
+                <View style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignSelf: "flex-start",
+                    width: "100%"
+                }}>
+                    <View>
+                        <Text style={styles.title}>{markerData?.name}</Text>
+                        <Text>{markerData?.city}</Text>
+                        <Text>{markerData?.scope?.join(", ")}</Text>
+                    </View>
+                    <ThemedButton raiseLevel={1} height={30} width={45} onPress={onClose} name="bruce" type="primary"
+                                  size="small">X</ThemedButton>
                 </View>
-                <ThemedButton raiseLevel={1} height={30} width={45}  onPress={onClose} name="bruce" type="primary" size="small">X</ThemedButton>
-            </View>
-            <Text style={{fontWeight: "bold", fontSize:20, marginTop:7}} >Games: </Text>
-            <View style={styles.selector}>
-                <ThemedButton raiseLevel={1} height={30} width={45} name="bruce" type="primary" size={"small"} onPress={ () => setInDate(moment(inDate).subtract(1, 'day'))}>{"<"}</ThemedButton>
-                <Text style={styles.datePicker}>{moment(inDate).format("DD-MM-YYYY")}</Text>
-                <ThemedButton raiseLevel={1} height={30} width={45} name="bruce" type="primary" size="small" onPress={ () => setInDate(moment(inDate).add(1, 'day'))}>{">"}</ThemedButton>
-            </View>
+                <Text style={{fontWeight: "bold", fontSize: 20, marginTop: 7}}>Games: </Text>
+                <View style={styles.selector}>
+                    <ThemedButton raiseLevel={1} height={30} width={45} name="bruce" type="primary" size={"small"}
+                                  onPress={() => setInDate(moment(inDate).subtract(1, 'day'))}>{"<"}</ThemedButton>
+                    <Text style={styles.datePicker}>{moment(inDate).format("DD-MM-YYYY")}</Text>
+                    <ThemedButton raiseLevel={1} height={30} width={45} name="bruce" type="primary" size="small"
+                                  onPress={() => setInDate(moment(inDate).add(1, 'day'))}>{">"}</ThemedButton>
+                </View>
 
-            <FlatList
-                data={markerData.games}
-                renderItem={({item}) => <Item
-                    scope={item.scope}
-                    gameDate={item.gameDate}
-                    endDate={item.endDate}
-                    teamID={item.team._id}
-                    teamName={item.team.name}
-                    inGame={false}
-                                                />}
-                keyExtractor={item => item._id}
-            />
-            {/*<TouchableOpacity onPress={onClose}>*/}
-            {/*    <Text>Close</Text>*/}
-            {/*</TouchableOpacity>*/}
-
-            <View style={{display:"flex", flexDirection:"row"}}>
-            <ThemedButton style={{marginRight: 10}} name="bruce" type="primary" size="small" onPress={() => {
-                onClose();
-                navigation.navigate('GameForm', {courtID: markerData._id, scope: markerData.scope});}
-            }>Create Game</ThemedButton>
+                <FlatList
+                    data={markerData.games}
+                    renderItem={({item}) => <Item
+                        scope={item.scope}
+                        gameDate={item.gameDate}
+                        endDate={item.endDate}
+                        teamID={item.team._id}
+                        teamName={item.team.name}
+                        inGame={false}
+                    />}
+                    keyExtractor={item => item._id}
+                />
+                <View style={{display: "flex", flexDirection: "row"}}>
+                    <ThemedButton style={{marginRight: 10}} name="bruce" type="primary" size="small" onPress={() => {
+                        onClose();
+                        navigation.navigate('GameForm', {courtID: markerData._id, scope: markerData.scope});
+                    }
+                    }>Create Game</ThemedButton>
 
 
-            {nav && <ThemedButton name="bruce" type="primary" size="small" onPress={() => {
-                onClose();
-                console.log(nav);
-                onNavigation(null, null);
-            }
-            }>Cancel Navigation</ThemedButton> }
-            {!nav &&
-            <ThemedButton name="bruce" type="primary" size="small" onPress={() => {
-                onClose();
-                console.log(markerData.location);
-                onNavigation(markerData.location.LAT, markerData.location.LON);
-            }
-            }>Navigate</ThemedButton> }
-            </View>
-        </SafeAreaView>
+                    {nav && <ThemedButton name="bruce" type="primary" size="small" onPress={() => {
+                        onClose();
+                        onNavigation(null, null);
+                    }
+                    }>Cancel Navigation</ThemedButton>}
+                    {!nav &&
+                        <ThemedButton name="bruce" type="primary" size="small" onPress={() => {
+                            onClose();
+                            onNavigation(markerData.location.LAT, markerData.location.LON);
+                        }
+                        }>Navigate</ThemedButton>}
+                </View>
+            </SafeAreaView>
         </Modal>
     );
 };
@@ -177,14 +175,8 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     item: {
-        // backgroundColor: 'steelblue',
-        // padding: 20,
         width: screenWidth * 0.75,
-        // marginVertical: 8,
-        // marginHorizontal: 16,
-        // height: '100%',
-        // width: '100%',
-        flex:1,
+        flex: 1,
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#FFF",
