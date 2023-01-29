@@ -5,11 +5,12 @@ import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import * as Location from 'expo-location';
 import {Marker} from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
-
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 import {CourtModal} from '../Components/courtModal';
 import {useIsFocused} from "@react-navigation/native";
+import Config from 'react-native-config';
+
 
 export const Map = ({navigation}) => {
     const [courts, setCourts] = useState([]);
@@ -105,6 +106,7 @@ export const Map = ({navigation}) => {
                         latitude: selectedLocation?.latitude,
                         longitude: selectedLocation?.longitude
                     }}
+                    apikey={Config.GOOGLE_API_KEY}
                     strokeWidth={3}
                     strokeColor="#0098C7"
                 />

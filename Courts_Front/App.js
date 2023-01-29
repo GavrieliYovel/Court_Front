@@ -12,7 +12,6 @@ import {RegisterStack} from './Nevigation/RegistrationStack'
 import {GameForm} from './Components/GameForm'
 import {UserProfile} from './Components/UserProfile'
 import {UserProfileStack} from "./Nevigation/UserProfileStack";
-
 LogBox.ignoreAllLogs(); // Ignore log notification by message
 
 function App() {
