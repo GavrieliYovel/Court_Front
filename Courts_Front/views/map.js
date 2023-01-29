@@ -5,18 +5,19 @@ import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import * as Location from 'expo-location';
 import {Marker} from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
-
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 import {CourtModal} from '../Components/courtModal';
 import {useIsFocused} from "@react-navigation/native";
+import Config from 'react-native-config';
+
 
 export const Map = ({navigation}) => {
     const [courts, setCourts] = useState([]);
     const [location, setLocation] = useState({});
     const [modalVisible, setModalVisible] = useState(false);
     const [markerData, setMarkerData] = useState({});
-    const [selectedLocation, setSelectedLocation] = useState({});
+    const [selectedLocation, setSelectedLocation] = useState(null);
     const isFocused = useIsFocused();
 
     const getCourtPins = () => {
@@ -53,8 +54,8 @@ export const Map = ({navigation}) => {
             style={styles.container}
             provider={PROVIDER_GOOGLE}
             region={{
-                latitude: location.coords ? location.coords.latitude : 32.08897,
-                longitude: location.coords ? location.coords.longitude : 34.81254,
+                latitude: location.coords ? location?.coords.latitude : 32.08897,
+                longitude: location.coords ? location?.coords.longitude : 34.81254,
                 latitudeDelta: 0.005,
                 longitudeDelta: 0.0005
             }}
@@ -81,10 +82,34 @@ export const Map = ({navigation}) => {
                         modalVisible={modalVisible}
                         markerData={markerData}
                         onClose={() => setModalVisible(false)}
+                        onNavigation={(lat, long) => {
+                            if(lat === null) {
+                                setSelectedLocation(null)
+                            } else {
+                                setSelectedLocation( {
+                                    latitude: lat,
+                                    longitude: long,})}
+                            }
+                        }
+                        nav={selectedLocation}
                         navigation={navigation}
                     />
                 </Marker>
             )):[]}
+
+                <MapViewDirections
+                    origin={{
+                        latitude: location.coords ? location?.coords.latitude : 32.08897,
+                        longitude: location.coords ? location?.coords.longitude : 34.81254,
+                    }}
+                    destination={{
+                        latitude: selectedLocation?.latitude,
+                        longitude: selectedLocation?.longitude
+                    }}
+                    apikey={Config.GOOGLE_API_KEY}
+                    strokeWidth={3}
+                    strokeColor="#0098C7"
+                />
 
         </MapView>
     );

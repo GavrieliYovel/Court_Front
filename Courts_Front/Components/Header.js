@@ -4,7 +4,7 @@ import {Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import {useSelector} from "react-redux";
 import {getUser, selectUser} from "../features/userSlice";
 import {store} from "../store";
-
+import {UserProfile} from './UserProfile'
 const User = ({ username }) => {
     const user = useSelector(selectUser);
     return (
@@ -21,12 +21,12 @@ const CourtsLogo = () =>{
     )
 
 }
-const HeaderButtons = () => {
+const HeaderButtons = ({navigation}) => {
     return (
         <View style={{flex :1, flexDirection:"row", alignItems: "flex-end"}} >
             <TouchableOpacity
                 style={{ borderRadius:5, paddingVertical:10, paddingHorizontal:2, flexDirection: 'row', backgroundColor: 'transparent' }}
-                // onPress={() => )
+                 onPress={() => navigation.navigate("UserProfile")}
             >
                 <Ionicons name="settings-sharp" size={24} color="black" />
             </TouchableOpacity>

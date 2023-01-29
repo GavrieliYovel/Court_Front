@@ -84,9 +84,11 @@ const labelStyle = StyleSheet.create({
 
 export const GameForm = ({navigation, route}) => {
     const courtID = route.params.courtID;
+    const scope = route.params.scope;
+    console.log(scope);
     console.log(courtID);
     const user = useSelector(selectUser);
-    const [gameScope, onChangeGameScope] = React.useState('Football');
+    const [gameScope, onChangeGameScope] = React.useState('');
     const [gameDuration, onChangeGameDuration] = React.useState('15');
     // const [date, setDate] = React.useState(new Date());
     const [selectedTeam, onChangeTeams] = React.useState('');
@@ -96,6 +98,8 @@ export const GameForm = ({navigation, route}) => {
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [text, setText] = useState('Date');
+    const [error, setError] = useState(false);
+    const [errorText, setErrorText] = useState('');
 
     const onChange= (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -121,6 +125,21 @@ export const GameForm = ({navigation, route}) => {
         console.log(date);
         console.log(moment(date).add(parseInt(gameDuration), 'minutes').toDate());
         console.log(selectedTeam);
+        if(gameScope === '') {
+            setErrorText('Choose Scope');
+            setError(true);
+            return;
+        }
+        if(selectedTeam === '') {
+            setErrorText('Choose Team');
+            setError(true);
+            return;
+        }
+        if(text === 'Date') {
+            setErrorText('Choose Date');
+            setError(true);
+            return;
+        }
 
         fetch('https://courts.onrender.com/games/new', {
             method: 'POST',
@@ -142,7 +161,10 @@ export const GameForm = ({navigation, route}) => {
                 console.log(data);
                 navigation.goBack()
             })
-            .catch(e => console.log('Could not save the game', e))
+            .catch(e => {
+                setErrorText('There is already a game at this time!');
+                setError(true);
+            })
     }
     const [teams, setTeams] = React.useState([]);
     useEffect(()=>{
@@ -161,7 +183,7 @@ export const GameForm = ({navigation, route}) => {
         })
         return (
             <View style={{display:'flex', flexDirection:'row', width:'100%', alignItems:"center"}}>
-                <View>
+                <View style={{width:'85%'}}>
                     <Text style={{fontWeight: 'bold', marginTop:10}}>{item.name} </Text>
                     <Text style={{marginTop:10}}>Team's players: {names+ ' '}</Text>
                 </View>
@@ -201,21 +223,39 @@ export const GameForm = ({navigation, route}) => {
                     <Text style={labelStyle} marginBottom={5}>Select game's scope:</Text>
                     <View style={{display: 'flex',flexDirection: 'row'}}>
                         <Text style={{color: "black", marginTop:10, width:100}}>Football</Text>
+                        {scope.includes("Football") ?
                         <RadioButton
                             style={{width: 10}}
                             value="Football"
                             status={ gameScope === 'Football' ? 'checked' : 'unchecked' }
                             onPress={() => onChangeGameScope('Football')}
-                        />
+                        /> :
+                            <RadioButton
+                                style={{width: 10, color: "gray"}}
+                                value="Football"
+                                status={ gameScope === 'Football' ? 'checked' : 'unchecked' }
+                                onPress={() => onChangeGameScope('Football')}
+                                disabled={"disable"}
+                            />
+                        }
                     </View>
                     <View style={{display: 'flex',flexDirection: 'row'}}>
                         <Text style={{color: "black", marginTop:10, width:100}}>Basketball</Text>
+                        {scope.includes("Basketball") ?
                         <RadioButton
                             style={{ width: 10}}
                             value="Basketball"
                             status={ gameScope === 'Basketball' ? 'checked' : 'unchecked' }
                             onPress={() => onChangeGameScope('Basketball')}
+                        />:
+                        <RadioButton
+                            style={{ width: 10, color: "gray"}}
+                            value="Basketball"
+                            status={ gameScope === 'Basketball' ? 'checked' : 'unchecked' }
+                            onPress={() => onChangeGameScope('Basketball')}
+                            disabled={"disable"}
                         />
+                        }
                     </View>
                 </View>
                 <View style={{display: 'flex',flexDirection: 'row', marginTop:10, alignItems: "center"}}>
@@ -224,12 +264,12 @@ export const GameForm = ({navigation, route}) => {
                 </View>
                 <View style={{display: 'flex',flexDirection: 'row', marginTop:10, alignItems: "center"}}>
                     <TouchableOpacity style={{borderRadius: 10, borderWidth:1, marginRight:5}} onPress={() => showMode('date')}>
-                        <Text style={{padding:5, color: '#666'}}>
+                        <Text style={{padding:5}}>
                             Select Date
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{borderRadius: 10, borderWidth:1}} onPress={() => showMode('time')}>
-                        <Text style={{padding:5, color: '#666'}}>
+                        <Text style={{padding:5}}>
                             Select Time
                         </Text>
                     </TouchableOpacity>
@@ -273,6 +313,9 @@ export const GameForm = ({navigation, route}) => {
                 </View>
                 <ThemedButton style={{marginHorizontal: 70, marginVertical: 10}} stretch={false} name={"bruce"}
                               type="primary" size={"large"} onPress={OnPressSave}>Submit</ThemedButton>
+
+                {error && <Text style={{color: "red", fontWeight: "bold", fontSize: 15}}>{errorText}</Text>}
+
             </View>
 
     )

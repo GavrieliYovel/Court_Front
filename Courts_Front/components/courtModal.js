@@ -20,8 +20,9 @@ import { ThemedButton } from 'react-native-really-awesome-button';
 import {useSelector} from "react-redux";
 import {selectUser} from "../features/userSlice";
 import {useIsFocused} from "@react-navigation/native";
+import logBoxInspectorFooter from "react-native/Libraries/LogBox/UI/LogBoxInspectorFooter";
 
-export const CourtModal = ({ navigation, modalVisible, markerData, onClose }) => {
+export const CourtModal = ({ navigation, modalVisible, markerData, onClose, onNavigation, nav }) => {
     const user = useSelector(selectUser);
     const [inTeam, setInTeam] = useState([]);
     const [inDate, setInDate] = useState(Date(Date.now()));
@@ -72,7 +73,7 @@ export const CourtModal = ({ navigation, modalVisible, markerData, onClose }) =>
         getInTeam(user.userID);
     }, [isFocused]);
     //const checkInTeam
-    const Item = ({scope, gameDate, endDate, teamID, inGame }) => {
+    const Item = ({scope, gameDate, endDate, teamID, teamName }) => {
         const start = moment(gameDate).format("HH:mm A");
         const end = moment(endDate).format("HH:mm A");
         const date = moment(gameDate).format("DD-MM-YYYY");
@@ -82,6 +83,7 @@ export const CourtModal = ({ navigation, modalVisible, markerData, onClose }) =>
             return(
                 <View style={styles.item}>
                     <Text>{date}</Text>
+                    <Text>Team: {teamName}</Text>
                     <Text>Playing: {scope}</Text>
                     <Text style={{marginBottom: 5}} >{start}-{end}</Text>
                     { inTeam.find(team => team._id == teamID)?
@@ -128,7 +130,8 @@ export const CourtModal = ({ navigation, modalVisible, markerData, onClose }) =>
                     scope={item.scope}
                     gameDate={item.gameDate}
                     endDate={item.endDate}
-                    teamID={item.team}
+                    teamID={item.team._id}
+                    teamName={item.team.name}
                     inGame={false}
                                                 />}
                 keyExtractor={item => item._id}
@@ -137,11 +140,27 @@ export const CourtModal = ({ navigation, modalVisible, markerData, onClose }) =>
             {/*    <Text>Close</Text>*/}
             {/*</TouchableOpacity>*/}
 
+            <View style={{display:"flex", flexDirection:"row"}}>
+            <ThemedButton style={{marginRight: 10}} name="bruce" type="primary" size="small" onPress={() => {
+                onClose();
+                navigation.navigate('GameForm', {courtID: markerData._id, scope: markerData.scope});}
+            }>Create Game</ThemedButton>
 
+
+            {nav && <ThemedButton name="bruce" type="primary" size="small" onPress={() => {
+                onClose();
+                console.log(nav);
+                onNavigation(null, null);
+            }
+            }>Cancel Navigation</ThemedButton> }
+            {!nav &&
             <ThemedButton name="bruce" type="primary" size="small" onPress={() => {
                 onClose();
-                navigation.navigate('GameForm', {courtID: markerData._id});}
-            }>Create Game</ThemedButton>
+                console.log(markerData.location);
+                onNavigation(markerData.location.LAT, markerData.location.LON);
+            }
+            }>Navigate</ThemedButton> }
+            </View>
         </SafeAreaView>
         </Modal>
     );

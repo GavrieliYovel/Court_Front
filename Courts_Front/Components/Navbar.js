@@ -10,10 +10,13 @@ import {Map} from '../views/map'
 import {useSelector} from "react-redux";
 import {selectUser} from "../features/userSlice";
 import {GameStack} from "../Nevigation/GameStack"
+
+
+
 const HeaderOptions = {
     headerTitle : (props) => <CourtsLogo/>,
     headerLeft : (props) =>  <User/>,
-    headerRight: (props) => <HeaderButtons/>,
+    headerRight: (props) => <HeaderButtons navigation={props.navigation}/>,
     headerStyle:{ height: 100 },
     headerTitleStyle: { fontWeight: 'bold', alignSelf: 'center', textAlign: 'center', justifyContent: 'center' }
 }

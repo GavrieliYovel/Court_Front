@@ -32,11 +32,11 @@ const styles = StyleSheet.create({
 });
 
 export const LoginScreen = ({navigation}) => {
-    const [email, onChangeEmail] = React.useState('');
-    const [password, onChangePassword] = React.useState('');
+    const [email, onChangeEmail] = React.useState('yovel@gmail.com');
+    const [password, onChangePassword] = React.useState('123456');
     const user = useSelector(selectUser);
-    const handleLogin = (userID, name) => {
-        store.dispatch(getUser({ userID, name }));
+    const handleLogin = (userID, name, email) => {
+        store.dispatch(getUser({ userID, name, email }));
     }
     const onPressLogin = () => {
         console.log('clicked');
@@ -53,7 +53,7 @@ export const LoginScreen = ({navigation}) => {
         })
             .then(response => response.json())
             .then(data => {
-                handleLogin(data._id, data.name);
+                handleLogin(data._id, data.name, data.email);
                 console.log(user);
             } )
             .catch(e => console.log('login fail'))
