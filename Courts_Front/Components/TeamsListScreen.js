@@ -10,8 +10,6 @@ import leaveTeam from "../Fetches/leaveTeam";
 import ConfirmChangesModal from "./ConfirmChangesModal";
 
 
-// const playerId = '63c6f3353dbfc677bcb2e871'
-
 const TeamsByPlayerList = ({navigation}) => {
     const user = useSelector(selectUser);
     const [teams, setTeams] = useState([]);

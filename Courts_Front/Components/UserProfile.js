@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react';
 import {View, SafeAreaView, StyleSheet, Image} from 'react-native';
 import {
-    Avatar,
     Title,
     Caption,
     Text,

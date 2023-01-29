@@ -1,8 +1,6 @@
 import {Text, View} from "react-native";
 import styled from "styled-components/native";
 import {Card} from "react-native-elements";
-import ThemedButton from "react-native-really-awesome-button/src/themed/ThemedButton";
-import {FontAwesome} from "@expo/vector-icons";
 import React from "react";
 
 
@@ -11,27 +9,39 @@ const AgendaItem = (item, firstItemInDay) => {
     return (
         <StyledCard>
             <StyledText>{item.name}</StyledText>
-            <StyledView style={{flex: 1, flexDirection: "row"}}>
-                <StyledTitle>Team:</StyledTitle>
-                <Text>{item.team.name}</Text>
-                <StyledTitle>Game:</StyledTitle>
-                <Text>{item.type}</Text>
-                <StyledTitle>Start Time</StyledTitle>
-                <Text>{item.startTime}</Text>
-                <StyledTitle>End Time</StyledTitle>
-                <Text>{item.endTime}</Text>
-
-
+            <StyledView>
+                <LabelTextContainer>
+                    <StyledTitle>Team:</StyledTitle>
+                    <Text>{item.team.name}</Text>
+                </LabelTextContainer>
+                <LabelTextContainer>
+                    <StyledTitle>Game:</StyledTitle>
+                    <Text>{item.type}</Text>
+                </LabelTextContainer>
+                <LabelTextContainer>
+                    <StyledTitle>Start Time:</StyledTitle>
+                    <Text>{item.startTime}</Text>
+                </LabelTextContainer>
+                <LabelTextContainer>
+                    <StyledTitle>End Time:</StyledTitle>
+                    <Text>{item.endTime}</Text>
+                </LabelTextContainer>
+                <LabelTextContainer>
+                    <StyledTitle>Court:</StyledTitle>
+                    <Text>{item.court}</Text>
+                </LabelTextContainer>
             </StyledView>
         </StyledCard>
     )
 }
 
-const StyledCard = styled(Card.Divider)`
+const LabelTextContainer = styled(View)`
   flex: 1;
-  flex-wrap: wrap;
-  height: 100%;
-  width: 100%;
+  width: 100;
+  flex-direction: row;
+  align-items: flex-start;
+`;
+const StyledCard = styled(Card.Divider)`
   background-color: #F8F9FA;
   border-radius: 10px;
   margin: 10px;
@@ -50,6 +60,7 @@ const StyledView = styled.View`
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 30px;
+
 `;
 
 const StyledTitle = styled.Text`

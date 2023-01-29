@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {View, FlatList, ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
 import {CardTeamsToJoin} from "./Card";
 import ConfirmChangesModal from "./ConfirmChangesModal";
@@ -15,6 +15,7 @@ const StyledViewForPlayers = styled(View)`
   border-radius: 7px;
   margin: 5px 3px 5px 3px;
 `;
+
 const TeamsJoinScreen = ({ navigation, playerId}) => {
     const user = useSelector(selectUser);
     const [teams, setTeams] = useState([]);
@@ -37,10 +38,6 @@ const TeamsJoinScreen = ({ navigation, playerId}) => {
     }, [isFocused]);
 
 
-
-    // useEffect(()=>{
-    //     setTeams(allTeamsData);
-    // },[]);
 
     const confirmJoin = () =>{
         setLoadModal(true);

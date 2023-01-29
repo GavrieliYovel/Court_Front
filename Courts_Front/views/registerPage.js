@@ -12,9 +12,8 @@ import {
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {getUser, selectUser} from '../features/userSlice';
+import {getUser} from '../features/userSlice';
 import {store} from "../store";
-import {useSelector} from "react-redux";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from "moment";
 
@@ -38,20 +37,14 @@ export const RegisterScreen = ({navigation}) => {
     const [confirmPassword, onChangeConfirmPassword] = React.useState('');
     const [error, setError] = useState(false);
     const [errorText, setErrorText] = useState('');
-
-    //datetimepicker
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [text, setText] = useState('Date of Birth');
-
-    const [phone, onChangePhone] = useState('');
-    const [address, onChangeAddress] = useState('');
     const [name, onChangeName] = useState('');
 
 
     const onChange= (event, selectedDate) => {
-        console.log(selectedDate);
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
         setDate(currentDate);
@@ -60,7 +53,7 @@ export const RegisterScreen = ({navigation}) => {
         let fDate = moment(tempDate).format("DD-MM-YYYY");
         let fTime = moment(tempDate).format("HH:mm A")
         setText(fDate);
-        console.log(fDate);
+
     }
     const showMode = (currentMode) => {
         setShow(true);
@@ -71,7 +64,6 @@ export const RegisterScreen = ({navigation}) => {
         store.dispatch(getUser({ userID, name, email }));
     }
     const onPressRegister = () => {
-        console.log('clicked');
         if(name === '') {
             setErrorText("Enter Full Name");
             setError(true);

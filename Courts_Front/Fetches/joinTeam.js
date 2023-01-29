@@ -1,17 +1,14 @@
-
 const joinTeam = (teamId, playerId) => {
-
-    let newTeam
+    let newTeam;
     fetch(`https://courts.onrender.com/teams/player/${teamId}/${playerId}`, {
-        method: 'PUT',
-        mode: 'cors',
-        headers: {
-            'Content-Type': 'application/json'
+            method: 'PUT',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            }
         }
-        }
-    ).then(response => console.log(response))
-
-
+    ).then(response => response.json())
+        .then(data  => newTeam = data)
     return newTeam;
 }
- export default joinTeam
+export default joinTeam

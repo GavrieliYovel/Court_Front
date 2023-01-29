@@ -4,7 +4,6 @@ import {Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import {useSelector} from "react-redux";
 import {getUser, selectUser} from "../features/userSlice";
 import {store} from "../store";
-import TeamStack from "../Nevigation/TeamStack";
 
 const User = ({ username }) => {
     const user = useSelector(selectUser);

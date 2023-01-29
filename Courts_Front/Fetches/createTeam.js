@@ -8,11 +8,7 @@ const createTeam = (newTeam) => {
             },
             body:JSON.stringify(newTeam)
         }
-    ).then(response => {
-        console.log(response.json())
-        return true;
-    })
-
+    )
 
 }
 export default createTeam

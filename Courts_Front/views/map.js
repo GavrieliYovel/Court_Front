@@ -1,12 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
 import {useState, useEffect} from "react";
-import {Image, StyleSheet, Text, View, Modal, TouchableOpacity, Dimensions, Card, Button} from 'react-native';
+import {Image, StyleSheet} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import * as Location from 'expo-location';
 import {Marker} from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
 import {CourtModal} from '../Components/courtModal';
 import {useIsFocused} from "@react-navigation/native";
 
@@ -136,21 +133,4 @@ const styles = StyleSheet.create({
         elevation: 5,
     }
 });
-
-// <Modal
-//     animationType="slide"
-//     transparent={false}
-//     visible={modalVisible}
-//     onRequestClose={() => setModalVisible(false)}
-// >
-//     <View style={styles?.modalContainer}>
-//         <Text>Court Name: {markerData?.name}</Text>
-//         <Text>City: {markerData?.city}</Text>
-//         <Text>Scope: {markerData?.scope?.join(" ")}</Text>
-//         <TouchableOpacity onPress={() => setModalVisible(false)}>
-//             <Text>Close</Text>
-//         </TouchableOpacity>
-//     </View>
-// </Modal>
-
 

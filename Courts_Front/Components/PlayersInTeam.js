@@ -4,7 +4,6 @@ import React from "react";
 import styled from "styled-components/native";
 
 const StyledViewForPlayers = styled(View)`
-  //background-color: black;
   color: white;
   border-radius: 7px;
   margin: 5px 3px 5px 3px;
