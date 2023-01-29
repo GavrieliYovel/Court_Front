@@ -20,8 +20,9 @@ import { ThemedButton } from 'react-native-really-awesome-button';
 import {useSelector} from "react-redux";
 import {selectUser} from "../features/userSlice";
 import {useIsFocused} from "@react-navigation/native";
+import logBoxInspectorFooter from "react-native/Libraries/LogBox/UI/LogBoxInspectorFooter";
 
-export const CourtModal = ({ navigation, modalVisible, markerData, onClose }) => {
+export const CourtModal = ({ navigation, modalVisible, markerData, onClose, onNavigation, nav }) => {
     const user = useSelector(selectUser);
     const [inTeam, setInTeam] = useState([]);
     const [inDate, setInDate] = useState(Date(Date.now()));
@@ -139,11 +140,27 @@ export const CourtModal = ({ navigation, modalVisible, markerData, onClose }) =>
             {/*    <Text>Close</Text>*/}
             {/*</TouchableOpacity>*/}
 
-
-            <ThemedButton name="bruce" type="primary" size="small" onPress={() => {
+            <View style={{display:"flex", flexDirection:"row"}}>
+            <ThemedButton style={{marginRight: 10}} name="bruce" type="primary" size="small" onPress={() => {
                 onClose();
                 navigation.navigate('GameForm', {courtID: markerData._id, scope: markerData.scope});}
             }>Create Game</ThemedButton>
+
+
+            {nav && <ThemedButton name="bruce" type="primary" size="small" onPress={() => {
+                onClose();
+                console.log(nav);
+                onNavigation(null, null);
+            }
+            }>Cancel Navigation</ThemedButton> }
+            {!nav &&
+            <ThemedButton name="bruce" type="primary" size="small" onPress={() => {
+                onClose();
+                console.log(markerData.location);
+                onNavigation(markerData.location.LAT, markerData.location.LON);
+            }
+            }>Navigate</ThemedButton> }
+            </View>
         </SafeAreaView>
         </Modal>
     );
