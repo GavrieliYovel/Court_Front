@@ -10,16 +10,8 @@ import {Map} from '../views/map'
 import {useSelector} from "react-redux";
 import {selectUser} from "../features/userSlice";
 import {GameStack} from "../Nevigation/GameStack"
+import GamesStack from "../Nevigation/GamesStack";
 
-
-
-const HeaderOptions = {
-    headerTitle : (props) => <CourtsLogo/>,
-    headerLeft : (props) =>  <User/>,
-    headerRight: (props) => <HeaderButtons navigation={props.navigation}/>,
-    headerStyle:{ height: 100 },
-    headerTitleStyle: { fontWeight: 'bold', alignSelf: 'center', textAlign: 'center', justifyContent: 'center' }
-}
 const iconMap = {
     Map: (focused, color)=>{
         return(
@@ -63,8 +55,15 @@ const TeamsScreen = () => {
 }
 
 
+export default function Navbar({navigation}) {
 
-export default function Navbar() {
+    const HeaderOptions =  {
+        headerTitle: (props) => <CourtsLogo/>,
+        headerLeft: (props) => <User/>,
+        headerRight: (props) => <HeaderButtons navigation={{navigation}}/>,
+        headerStyle: {height: 100},
+        headerTitleStyle: {fontWeight: 'bold', alignSelf: 'center', textAlign: 'center', justifyContent: 'center'}
+    }
 
     return (
         // <NavigationContainer>

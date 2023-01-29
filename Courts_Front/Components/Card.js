@@ -1,10 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {Card} from 'react-native-elements';
 import styled from 'styled-components/native';
 import {Feather, FontAwesome, MaterialCommunityIcons} from "@expo/vector-icons";
 import ThemedButton from "react-native-really-awesome-button/src/themed/ThemedButton";
-
 
 
 const StyledCard = styled(Card.Divider)`
@@ -43,7 +42,7 @@ const ButtonContainer = styled(View)`
 `;
 
 
-const CardTeamListPlayer = ({navigation, children, team}) => {
+const CardTeamListPlayer = ({ onExit, navigation, children, team}) => {
     return (
 
         <StyledCard>
@@ -61,7 +60,7 @@ const CardTeamListPlayer = ({navigation, children, team}) => {
                 {/*<ThemedButton  style={{marginLeft: 5}} raiseLevel={2} borderRadius={30} activityColor={"blue"} borderColor={"darkblue"} backgroundColor={"dodgerblue"} width={60} stretch={false} name={"bruce"} type="primary" size={"small"}>*/}
                 {/*    <FontAwesome name="plus" size={24} color="white" />*/}
                 {/*</ThemedButton>*/}
-                <ThemedButton style={{marginLeft: 5}} raiseLevel={2} borderRadius={30} activityColor={"darkgreen"} borderColor={"darkgreen"} backgroundColor={"tomato"} width={60} stretch={false} name={"bruce"} type="primary" size={"small"}>
+                <ThemedButton onPress={()=> onExit(team)} style={{marginLeft: 5}} raiseLevel={2} borderRadius={30} activityColor={"darkgreen"} borderColor={"darkgreen"} backgroundColor={"tomato"} width={60} stretch={false} name={"bruce"} type="primary" size={"small"}>
                     <MaterialCommunityIcons name="exit-run" size={24} color="black" />
                 </ThemedButton>
             </ButtonContainer>
@@ -69,17 +68,17 @@ const CardTeamListPlayer = ({navigation, children, team}) => {
     )
 };
 
-const CardTeamsToJoin = ({navigation, title, children, details}) =>{
+const CardTeamsToJoin = ({ onJoin, team, children}) =>{
     return(
         <StyledCard>
-            <StyledText>{title}</StyledText>
+            <StyledText>{team.name}</StyledText>
             <StyledView style={{flex: 1, flexDirection: "row"}}>
                 <StyledTitle>Details:</StyledTitle>
-                <Text>{details}</Text>
+                <Text>{team.details}</Text>
                 <StyledTitle> Team Members:</StyledTitle>
                 {children}
             </StyledView>
-            <ThemedButton  raiseLevel={2} borderRadius={30} activityColor={"darkgreen"} borderColor={"darkgreen"} backgroundColor={"green"} width={60} stretch={true} name={"bruce"} type="primary" size={"small"}>
+            <ThemedButton onPress={ () => onJoin(team)} raiseLevel={2} borderRadius={30} activityColor={"darkgreen"} borderColor={"darkgreen"} backgroundColor={"green"} width={60} stretch={true} name={"bruce"} type="primary" size={"small"}>
                 <FontAwesome name="plus" size={24} color="white" />
             </ThemedButton>
         </StyledCard>

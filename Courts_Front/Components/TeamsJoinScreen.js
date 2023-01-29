@@ -2,11 +2,12 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
 import {CardTeamsToJoin} from "./Card";
-import {allTeamsData} from "../StatitcDatatForTest/allTeamsData"
-import {ThemedButton} from 'react-native-really-awesome-button';
+import ConfirmChangesModal from "./ConfirmChangesModal";
 import {useSelector} from "react-redux";
 import {selectUser} from "../features/userSlice";
 import {useIsFocused} from "@react-navigation/native";
+import PlayersInTeam from "./PlayersInTeam";
+import joinTeam from "../Fetches/joinTeam";
 
 const StyledViewForPlayers = styled(View)`
   background-color: black;
@@ -18,7 +19,11 @@ const TeamsJoinScreen = ({ navigation, playerId}) => {
     const user = useSelector(selectUser);
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [modalShow, setModalShow] = useState(false);
+    const [teamJoin, setTeamJoin] = useState({})
+    const [loadModal, setLoadModal] =useState(false);
     const isFocused = useIsFocused();
+
 
     useEffect(() => {
         setLoading(true);
@@ -31,35 +36,30 @@ const TeamsJoinScreen = ({ navigation, playerId}) => {
             .catch(error => console.error('Error:', error));
     }, [isFocused]);
 
+
+
     // useEffect(()=>{
     //     setTeams(allTeamsData);
     // },[]);
 
-
-    let PlayersInTeam = ({team}) => {
-        return (
-            team.players.map((player) => {
-                return (<StyledViewForPlayers><Text
-                    style={{color: 'white'}}>{player.name}</Text></StyledViewForPlayers>)
-            })
-
-        )
+    const confirmJoin = () =>{
+        setLoadModal(true);
+        joinTeam(teamJoin._id, user.userID);
+        navigation.goBack();
     }
 
-    PlayersInTeam = styled(PlayersInTeam)`
-    ;
-      color: white;
-      font-weight: bold;
-      border-radius: 10px;
-      margin: 10px;
-      padding: 50px;
-    `;
-
+    const cancelJoin = () =>{
+        setModalShow(false);
+    }
+    const joinTeamHandler = (team) => {
+        setModalShow(true);
+        setTeamJoin(team);
+    }
 
     const renderItem = ({item}) => {
         return (
             <View>
-                <CardTeamsToJoin navigation ={navigation} title={item.name} children={<PlayersInTeam team={item}/>} details={item.details}/>
+                <CardTeamsToJoin onJoin={joinTeamHandler} team={item} children={<PlayersInTeam team={item}/>} />
             </View>
         );
     }
@@ -75,6 +75,7 @@ const TeamsJoinScreen = ({ navigation, playerId}) => {
     };
     return (
         <View>
+            {modalShow && <ConfirmChangesModal loading={loadModal} message={`Join ${teamJoin.name}?`} onConfirm={confirmJoin} onCancel={cancelJoin}/>}
             <ActivityIndicator animating={loading} style={{
                 position: 'absolute',
                 left: 0,

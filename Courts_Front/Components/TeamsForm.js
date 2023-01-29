@@ -1,22 +1,26 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TextInput} from 'react-native';
+import {View, Text, TextInput, ScrollView} from 'react-native';
 import {Input, Button} from 'react-native-elements';
 import {StyleSheet} from "react-native";
 import {ThemedButton} from "react-native-really-awesome-button";
-import ConfirmChangesModal from "./ConfirmChngesModal";
+import ConfirmChangesModal from "./ConfirmChangesModal";
 import updateTeam from "../Fetches/updateTeam";
 import getAllUsers from "../Fetches/getAllUsers";
 import DropDownPicker from 'react-native-dropdown-picker';
 import users from "../StatitcDatatForTest/users";
 import {useSelector} from "react-redux";
 import {selectUser} from "../features/userSlice";
+import createTeam from "../Fetches/createTeam";
+import {KeyboardAvoidingView} from "react-native";
 
 // const playerId = '63c6f3353dbfc677bcb2e871';
-const teamDefault = {
-    _id: null,
-    name: "Team Name",
-    players: [],
-    details: "Team Details"
+const teamDefault = (playerId) => {
+    return Object({
+        _id: null,
+        name: null,
+        players: [{_id: playerId}],
+        details: null
+    })
 }
 
 const labelStyle = StyleSheet.create({
@@ -26,23 +30,19 @@ const labelStyle = StyleSheet.create({
 
 const TeamForm = ({navigation, route}) => {
     const user = useSelector(selectUser);
-    let isNewTeam = false;
-    const setNewTeam = () => {
-        isNewTeam = true;
-        return teamDefault
-    }
-    const team = route.params.team || setNewTeam();
-
+    const team = route.params.team || teamDefault(user.userID);
+    const [newTeam, setNewTeam] = useState(!route.params.team)
     const [modalVisible, setModalVisible] = useState(false);
-    const [loadingUpdating, seLoadingUpdate] = useState(false);
+    const [loadingUpdating, setLoadingUpdate] = useState(false);
     const [allUsers, setAllUsers] = useState([]);
-    const [loadingAllUsers, setLoadingUsers] = useState(true)
     const [name, setName] = useState(team.name);
     const [details, setDetails] = useState(team.details);
     const [open, setOpen] = useState(false);
     const [values, setValues] = useState(team.players.map((player) => player._id));
     const [players, setPlayers] = useState([]);
 
+
+    DropDownPicker.setMode("BADGE");
 
     useEffect(() => {
         getAllUsers().then(allUsers =>
@@ -65,17 +65,26 @@ const TeamForm = ({navigation, route}) => {
         setModalVisible(true);
     }
 
+    const confirmSave = async () => {
+        setLoadingUpdate(true);
+        const newTeam = new Object({
+            name: name,
+            details: details,
+            players: values
+        })
+        createTeam(newTeam).then(navigation.goBack());
+
+    }
     const confirmUpdate = async () => {
-        seLoadingUpdate(true);
+        setLoadingUpdate(true);
         const updatedTeam = new Object({
             name: name,
             details: details,
             players: values
         });
-        console.log(updatedTeam);
 
         await updateTeam(team._id, updatedTeam)
-            .then(seLoadingUpdate(false));
+            .then(setLoadingUpdate(false));
         if (navigation.canGoBack()) {
             navigation.goBack();
         }
@@ -83,7 +92,7 @@ const TeamForm = ({navigation, route}) => {
 
     }
     return (
-        <View style={{
+        <ScrollView style={{
             flex: 1,
             flexDirection: "column",
             marginTop: 20,
@@ -91,17 +100,22 @@ const TeamForm = ({navigation, route}) => {
             {modalVisible && <ConfirmChangesModal loading={loadingUpdating}
                                                   style={styles.modal} visible={true}
                                                   message={"Are you sure you want to keep changes?"}
-                                                  onConfirm={async () => {
-                                                      await confirmUpdate();
-                                                      setModalVisible(false)
-                                                  }
+                                                  onConfirm={newTeam ?
+                                                      async () =>{
+                                                       await confirmSave()
+                                                          setModalVisible(false)
+                                                      } :
+                                                      async () => {
+                                                          await confirmUpdate();
+                                                          setModalVisible(false)
+                                                      }
                                                   }
                                                   onCancel={() => setModalVisible(false)}
             />}
             <View>
-                <Input value={name} label={"Team name:"} labelStyle={labelStyle} placeholder={`${name}`}
+                <Input value={name} label={"Team name:"} labelStyle={labelStyle} placeholder={`${name ? name : "New team name"}`}
                        onChangeText={newName => setName(newName)}/>
-                <Input value={details} label={"Details:"} labelStyle={labelStyle} placeholder={`${details}`}
+                <Input value={details} label={"Details:"} labelStyle={labelStyle} placeholder={`${details ? details : "New team details"}`}
                        onChangeText={newDetails => setDetails(newDetails)}/>
             </View>
 
@@ -109,15 +123,17 @@ const TeamForm = ({navigation, route}) => {
                 <Text style={styles.label}>Add Players:</Text>
             </View>
 
-            <DropDownPicker multiple={true} value={values} setValue={setValues} items={players} open={open}
-                            setOpen={setOpen}/>
+            <DropDownPicker placeholder={'Choose player'} multiple={true} value={values} setValue={setValues}
+                            items={players} open={open}
+                            setOpen={setOpen} extendableBadgeContainer={true}
+                            badgeDotColors={["red", "orange", "yellow", "green", "blue", "purple"]}/>
 
-            <View style={{alignSelf: 'flex-end'}}>
+            <View  style={styles.buttonContainer} >
                 <ThemedButton style={{marginHorizontal: 70, marginVertical: 10}} stretch={false}
                               name={"bruce"}
                               type="primary" size={"large"} onPress={handleSubmit}>Submit</ThemedButton>
             </View>
-        </View>
+        </ScrollView>
     );
 };
 
@@ -141,6 +157,9 @@ const styles = StyleSheet.create({
         color: 'black',
         marginLeft: 8,
         marginBottom: 10,
+    },
+    buttonContainer: {
+        marginTop: 100
     }
 })
 
