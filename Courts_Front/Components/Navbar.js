@@ -1,13 +1,12 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {NavigationContainer} from '@react-navigation/native';
+import {Map} from '../views/map'
 import {Ionicons, FontAwesome5, FontAwesome, AntDesign } from "@expo/vector-icons";
-import {View, Text} from "react-native";
+
 import {User, CourtsLogo, HeaderButtons} from "./Header";
-import TeamsListScreen from "./TeamsListScreen";
-import TeamsJoinScreen from "./TeamsJoinScreen";
+
 import TeamStack from "../Nevigation/TeamStack";
 
-import {GameStack} from "../Nevigation/GameStack"
+import GamesStack from "../Nevigation/GamesStack";
 
 
 const iconMap = {
@@ -61,8 +60,8 @@ export default function Navbar({navigation}) {
                     tabBarInactiveTintColor: 'grey',
                 })}
             >
-                <Tab.Screen name="Map" component={GameStack} options={HeaderOptions}/>
-                <Tab.Screen name="Games" children={ ()  => <TeamsJoinScreen playerId={'63c6f3353dbfc677bcb2e871'}/>} options={HeaderOptions}/>
+                <Tab.Screen name="Map" component={Map} options={HeaderOptions}/>
+                <Tab.Screen name="Games" component={GamesStack} options={HeaderOptions}/>
                 {/*<Tab.Screen name="Teams" children= {() => <TeamsListScreen playerId={'63c6f3353dbfc677bcb2e871'}/>} options={HeaderOptions}/>*/}
                 <Tab.Screen name="Teams" component={TeamStack} options={HeaderOptions}/>
             </Tab.Navigator>
