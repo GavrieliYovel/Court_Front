@@ -65,8 +65,8 @@ export const RegisterScreen = ({navigation}) => {
         setMode(currentMode);
     }
 
-    const handleRegister = (userID, name) => {
-        store.dispatch(getUser({ userID, name }));
+    const handleRegister = (userID, name, email) => {
+        store.dispatch(getUser({ userID, name, email }));
     }
     const onPressRegister = () => {
         console.log('clicked');
@@ -87,7 +87,7 @@ export const RegisterScreen = ({navigation}) => {
             })
                 .then(response => response.json())
                 .then(data => {
-                    handleRegister(data._id, data.name);
+                    handleRegister(data._id, data.name, data.email);
                     console.log(user);
                 } )
                 .catch(e => console.log('login fail'))

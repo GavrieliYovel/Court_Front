@@ -1,8 +1,14 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import { FontAwesome5, FontAwesome, AntDesign } from "@expo/vector-icons";
+import {NavigationContainer} from '@react-navigation/native';
+import {Ionicons, FontAwesome5, FontAwesome, AntDesign } from "@expo/vector-icons";
 import {View, Text} from "react-native";
 import {User, CourtsLogo, HeaderButtons} from "./Header";
+import TeamsListScreen from "./TeamsListScreen";
+import TeamsJoinScreen from "./TeamsJoinScreen";
 import TeamStack from "../Nevigation/TeamStack";
+import {Map} from '../views/map'
+import {useSelector} from "react-redux";
+import {selectUser} from "../features/userSlice";
 import {GameStack} from "../Nevigation/GameStack"
 import GamesStack from "../Nevigation/GamesStack";
 
@@ -81,7 +87,7 @@ export default function Navbar({navigation}) {
                 })}
             >
                 <Tab.Screen name="Map" component={GameStack} options={HeaderOptions}/>
-               <Tab.Screen name="Games" component={GamesStack} options={HeaderOptions}/>
+                <Tab.Screen name="Games" children={ ()  => <TeamsJoinScreen playerId={'63c6f3353dbfc677bcb2e871'}/>} options={HeaderOptions}/>
                 {/*<Tab.Screen name="Teams" children= {() => <TeamsListScreen playerId={'63c6f3353dbfc677bcb2e871'}/>} options={HeaderOptions}/>*/}
                 <Tab.Screen name="Teams" component={TeamStack} options={HeaderOptions}/>
             </Tab.Navigator>

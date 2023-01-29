@@ -22,7 +22,7 @@ const CourtsLogo = () =>{
     )
 
 }
-const HeaderButtons = ({navigation}) => {
+const HeaderButtons = () => {
     return (
         <View style={{flex :1, flexDirection:"row", alignItems: "flex-end"}} >
             <TouchableOpacity
