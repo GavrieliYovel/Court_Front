@@ -35,6 +35,8 @@ export const RegisterScreen = ({navigation}) => {
     const [email, onChangeEmail] = React.useState('');
     const [password, onChangePassword] = React.useState('');
     const [confirmPassword, onChangeConfirmPassword] = React.useState('');
+    const [error, setError] = useState(false);
+    const [errorText, setErrorText] = useState('');
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
@@ -62,30 +64,54 @@ export const RegisterScreen = ({navigation}) => {
         store.dispatch(getUser({ userID, name, email }));
     }
     const onPressRegister = () => {
-        console.log('clicked');
-        if(password == confirmPassword) {
-            fetch('https://courts.onrender.com/users/new', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name: name,
-                    email: email.toLowerCase(),
-                    password: password,
-                    birthday: date,
-                    type: 'player'
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    handleRegister(data._id, data.name, data.email);
-                } )
-                .catch(e => console.log('login fail'))
-        } else {
-            console.log('password do match')
+        if(name === '') {
+            setErrorText("Enter Full Name");
+            setError(true);
+            return;
         }
+        if(email === '') {
+            setErrorText("Enter Email");
+            setError(true);
+            return;
+        }
+        if(password !== confirmPassword) {
+            setErrorText("The Password doesn't match");
+            setError(true);
+            return;
+        }
+        if(password === '') {
+            setErrorText("Enter Password");
+            setError(true);
+            return;
+        }
+        if(text === 'Date of Birth') {
+            setErrorText("Enter Date of Birth");
+            setError(true);
+            return;
+        }
+
+
+        fetch('https://courts.onrender.com/users/new', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email.toLowerCase(),
+                password: password,
+                birthday: date,
+                type: 'player'
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                handleRegister(data._id, data.name, data.email);
+                console.log(user);
+            } )
+            .catch(e => console.log('login fail'))
+
 
     }
     return (
@@ -189,7 +215,7 @@ export const RegisterScreen = ({navigation}) => {
                         </Text>
                     </TouchableOpacity>
                 </View>
-                {show && (
+                {show &&
                     <DateTimePicker
                         testID='dateTimePicker'
                         value={date}
@@ -197,9 +223,7 @@ export const RegisterScreen = ({navigation}) => {
                         is24Hour={true}
                         display='default'
                         onChange={onChange}
-                    />
-                )}
-
+                    />}
                 <Button
                     onPress={onPressRegister}
                     title="Register"
@@ -218,6 +242,7 @@ export const RegisterScreen = ({navigation}) => {
                         <Text style={{color: '#AD40AF', fontWeight: '700'}}> Login</Text>
                     </TouchableOpacity>
                 </View>
+                {error && <Text style={{marginTop:10, color: "red", fontWeight: "bold", fontSize: 15}}>{errorText}</Text>}
             </View>
         </SafeAreaView>
     );

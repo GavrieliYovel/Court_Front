@@ -103,8 +103,8 @@ export const Map = ({navigation}) => {
                         longitude: selectedLocation?.longitude
                     }}
                     apikey={`1`}
-                    strokeWidth={3}
-                    strokeColor="#0098C7"
+                    strokeWidth={5}
+                    strokeColor="black"
                 />
 
         </MapView>

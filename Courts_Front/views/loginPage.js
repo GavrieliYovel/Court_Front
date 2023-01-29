@@ -17,6 +17,7 @@ import {store} from "../store";
 import {useSelector} from "react-redux";
 
 
+
 const styles = StyleSheet.create({
     tinyLogo: {
         width: 300,
@@ -34,6 +35,9 @@ const styles = StyleSheet.create({
 export const LoginScreen = ({navigation}) => {
     const [email, onChangeEmail] = React.useState('yovel@gmail.com');
     const [password, onChangePassword] = React.useState('123456');
+    const [error, setError] = React.useState(false);
+    const [errorText, setErrorText] = React.useState('');
+
     const user = useSelector(selectUser);
     const handleLogin = (userID, name, email) => {
         store.dispatch(getUser({ userID, name, email }));
@@ -54,7 +58,11 @@ export const LoginScreen = ({navigation}) => {
             .then(data => {
                 handleLogin(data._id, data.name, data.email);
             } )
-            .catch(e => console.log('login fail'))
+            .catch(e => {
+                setErrorText("Email or Password Incorrect");
+                setError(true);
+                console.log('login fail');
+            })
     }
     return (
         <SafeAreaView style={{flex: 1, justifyContent: 'center',backgroundColor:"white"}}>
@@ -127,6 +135,7 @@ export const LoginScreen = ({navigation}) => {
                         <Text style={{color: 'steelblue', fontWeight: '700'}}> Register</Text>
                     </TouchableOpacity>
                 </View>
+                {error && <Text style={{marginTop:10, color: "red", fontWeight: "bold", fontSize: 15}}>{errorText}</Text>}
             </View>
         </SafeAreaView>
     );
