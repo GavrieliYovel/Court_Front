@@ -9,7 +9,6 @@ const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 import {CourtModal} from '../Components/courtModal';
 import {useIsFocused} from "@react-navigation/native";
-import Config from 'react-native-config';
 
 
 export const Map = ({navigation}) => {
@@ -106,7 +105,7 @@ export const Map = ({navigation}) => {
                         latitude: selectedLocation?.latitude,
                         longitude: selectedLocation?.longitude
                     }}
-                    apikey={Config.GOOGLE_API_KEY}
+                    apikey={`1`}
                     strokeWidth={3}
                     strokeColor="#0098C7"
                 />

@@ -22,12 +22,12 @@ const CourtsLogo = () =>{
     )
 
 }
-const HeaderButtons = () => {
+const HeaderButtons = ({navigation}) => {
     return (
         <View style={{flex :1, flexDirection:"row", alignItems: "flex-end"}} >
             <TouchableOpacity
                 style={{ borderRadius:5, paddingVertical:10, paddingHorizontal:2, flexDirection: 'row', backgroundColor: 'transparent' }}
-                 onPress={() => navigation.navigation.navigate("Games")}
+                 onPress={() => navigation.navigation.navigate("UserSettings")}
             >
                 <Ionicons name="settings-sharp" size={24} color="black" />
             </TouchableOpacity>

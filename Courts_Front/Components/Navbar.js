@@ -6,11 +6,9 @@ import {User, CourtsLogo, HeaderButtons} from "./Header";
 import TeamsListScreen from "./TeamsListScreen";
 import TeamsJoinScreen from "./TeamsJoinScreen";
 import TeamStack from "../Nevigation/TeamStack";
-import {Map} from '../views/map'
-import {useSelector} from "react-redux";
-import {selectUser} from "../features/userSlice";
+
 import {GameStack} from "../Nevigation/GameStack"
-import GamesStack from "../Nevigation/GamesStack";
+
 
 const iconMap = {
     Map: (focused, color)=>{
@@ -31,29 +29,6 @@ const iconMap = {
 
 }
 const Tab = createBottomTabNavigator();
-const MapScreen = () => {
-    return (
-        <View>
-            <Text>Home Screen</Text>
-        </View>
-    )
-}
-const GamesScreen = () => {
-    return (
-        <View>
-            <Text>Games Screen</Text>
-        </View>
-    )
-}
-const TeamsScreen = () => {
-    return (
-        <View>
-            <Text>Teams Screen</Text>
-
-        </View>
-    )
-}
-
 
 export default function Navbar({navigation}) {
 

@@ -1,19 +1,16 @@
-import {StatusBar} from 'expo-status-bar';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+
+import {LogBox, StyleSheet} from 'react-native';
 import Navbar from "./Components/Navbar";
 import {NavigationContainer} from '@react-navigation/native';
 import {useState} from "react";
-import { LoginScreen } from "./views/loginPage"
-import { RegisterScreen } from "./views/registerPage"
-import { Provider, useDispatch, useSelector } from 'react-redux'
+import { Provider, useSelector } from 'react-redux'
 import { store } from './store'
 import {selectUser} from "./features/userSlice";
-import {RegisterStack} from './Nevigation/RegistrationStack'
-import {GameForm} from './Components/GameForm'
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import GamesHome from "./views/Games";
 import RegisterStack from "./Nevigation/RegistrationStack";
-import GamesStack from "./Nevigation/GamesStack";
+import {UserProfileStack} from "./Nevigation/UserProfileStack";
+
+LogBox.ignoreAllLogs();
 
 function App() {
     const user = useSelector(selectUser);
@@ -25,7 +22,7 @@ function App() {
             {user.userID && < RootStack.Navigator screenOptions={{headerShown: false}}
                                                    initialRouteName={"Navbar"}>
                 <RootStack.Screen name={"NavBar"} component={Navbar}/>
-                <RootStack.Screen name={"Games"} component={GamesStack}/>
+                <RootStack.Screen name={"UserSettings"} component={UserProfileStack}/>
             </RootStack.Navigator>}
         </NavigationContainer>
     );
