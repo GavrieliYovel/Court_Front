@@ -10,8 +10,11 @@ import { store } from './store'
 import {selectUser} from "./features/userSlice";
 import {RegisterStack} from './Nevigation/RegistrationStack'
 import {GameForm} from './Components/GameForm'
+import {UserProfile} from './Components/UserProfile'
+import {UserProfileStack} from "./Nevigation/UserProfileStack";
 function App() {
     const user = useSelector(selectUser);
+    console.log('APP ' + user.userID );
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     return (
             <NavigationContainer>
