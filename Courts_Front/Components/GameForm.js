@@ -75,8 +75,6 @@ const labelStyle = StyleSheet.create({
 export const GameForm = ({navigation, route}) => {
     const courtID = route.params.courtID;
     const scope = route.params.scope;
-    console.log(scope);
-    console.log(courtID);
     const user = useSelector(selectUser);
     const [gameScope, onChangeGameScope] = React.useState('');
     const [gameDuration, onChangeGameDuration] = React.useState('15');
@@ -97,7 +95,6 @@ export const GameForm = ({navigation, route}) => {
         let fDate = moment(tempDate).format("DD-MM-YYYY");
         let fTime = moment(tempDate).format("HH:mm A")
         setText(fDate + ' ' + fTime);
-        console.log(fDate);
     }
     const showMode = (currentMode) => {
         setShow(true);
@@ -106,12 +103,6 @@ export const GameForm = ({navigation, route}) => {
 
 
     const OnPressSave = () => {
-        console.log('clicked');
-        console.log(user.userID);
-        console.log(gameScope);
-        console.log(date);
-        console.log(moment(date).add(parseInt(gameDuration), 'minutes').toDate());
-        console.log(selectedTeam);
         if(gameScope === '') {
             setErrorText('Choose Scope');
             setError(true);
@@ -188,7 +179,8 @@ export const GameForm = ({navigation, route}) => {
             <View style={{
                 display:"flex",
                 flex: 1,
-                marginHorizontal: 10
+                marginHorizontal: 20,
+                marginTop: 10
             }}>
                 <View style={{
                     marginVertical: 10,

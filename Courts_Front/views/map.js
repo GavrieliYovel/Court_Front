@@ -21,7 +21,6 @@ export const Map = ({navigation}) => {
             .then(response => response.json())
             .then(data => {
                 setCourts(data);
-                console.log(courts);
             })
             .catch(err => console.error(err));
     }
@@ -50,8 +49,8 @@ export const Map = ({navigation}) => {
             style={styles.container}
             provider={PROVIDER_GOOGLE}
             region={{
-                latitude: location.coords ? location?.coords.latitude : 32.08897,
-                longitude: location.coords ? location?.coords.longitude : 34.81254,
+                latitude: location.coords ? location?.coords.latitude : 32.09,
+                longitude: location.coords ? location?.coords.longitude : 34.8028,
                 latitudeDelta: 0.005,
                 longitudeDelta: 0.0005
             }}
