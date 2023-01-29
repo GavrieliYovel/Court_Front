@@ -5,7 +5,7 @@ import {createNativeStackNavigator} from "@react-navigation/native-stack";
 
 
 const Stack = createNativeStackNavigator();
-export const RegisterStack = () => {
+const RegisterStack = () => {
     return (
         <Stack.Navigator   screenOptions={{headerShown: false}}
                            initialRouteName={"LoginScreen"}>
@@ -14,4 +14,4 @@ export const RegisterStack = () => {
         </Stack.Navigator>)
 }
 
-
+export default  RegisterStack;

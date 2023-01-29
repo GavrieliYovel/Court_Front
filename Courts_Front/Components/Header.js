@@ -4,6 +4,7 @@ import {Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import {useSelector} from "react-redux";
 import {getUser, selectUser} from "../features/userSlice";
 import {store} from "../store";
+import TeamStack from "../Nevigation/TeamStack";
 
 const User = ({ username }) => {
     const user = useSelector(selectUser);
@@ -21,12 +22,12 @@ const CourtsLogo = () =>{
     )
 
 }
-const HeaderButtons = () => {
+const HeaderButtons = ({navigation}) => {
     return (
         <View style={{flex :1, flexDirection:"row", alignItems: "flex-end"}} >
             <TouchableOpacity
                 style={{ borderRadius:5, paddingVertical:10, paddingHorizontal:2, flexDirection: 'row', backgroundColor: 'transparent' }}
-                // onPress={() => )
+                 onPress={() => navigation.navigation.navigate("Games")}
             >
                 <Ionicons name="settings-sharp" size={24} color="black" />
             </TouchableOpacity>
