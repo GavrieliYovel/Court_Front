@@ -36,6 +36,8 @@ export const RegisterScreen = ({navigation}) => {
     const [email, onChangeEmail] = React.useState('');
     const [password, onChangePassword] = React.useState('');
     const [confirmPassword, onChangeConfirmPassword] = React.useState('');
+    const [error, setError] = useState(false);
+    const [errorText, setErrorText] = useState('');
 
     //datetimepicker
     const [date, setDate] = useState(new Date());
@@ -70,30 +72,54 @@ export const RegisterScreen = ({navigation}) => {
     }
     const onPressRegister = () => {
         console.log('clicked');
-        if(password == confirmPassword) {
-            fetch('https://courts.onrender.com/users/new', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name: name,
-                    email: email.toLowerCase(),
-                    password: password,
-                    birthday: date,
-                    type: 'player'
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    handleRegister(data._id, data.name, data.email);
-                    console.log(user);
-                } )
-                .catch(e => console.log('login fail'))
-        } else {
-            console.log('password do match')
+        if(name === '') {
+            setErrorText("Enter Full Name");
+            setError(true);
+            return;
         }
+        if(email === '') {
+            setErrorText("Enter Email");
+            setError(true);
+            return;
+        }
+        if(password !== confirmPassword) {
+            setErrorText("The Password doesn't match");
+            setError(true);
+            return;
+        }
+        if(password === '') {
+            setErrorText("Enter Password");
+            setError(true);
+            return;
+        }
+        if(text === 'Date of Birth') {
+            setErrorText("Enter Date of Birth");
+            setError(true);
+            return;
+        }
+
+
+        fetch('https://courts.onrender.com/users/new', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email.toLowerCase(),
+                password: password,
+                birthday: date,
+                type: 'player'
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                handleRegister(data._id, data.name, data.email);
+                console.log(user);
+            } )
+            .catch(e => console.log('login fail'))
+
 
     }
     return (
@@ -197,7 +223,7 @@ export const RegisterScreen = ({navigation}) => {
                         </Text>
                     </TouchableOpacity>
                 </View>
-                {show && (
+                {show &&
                     <DateTimePicker
                         testID='dateTimePicker'
                         value={date}
@@ -205,32 +231,7 @@ export const RegisterScreen = ({navigation}) => {
                         is24Hour={true}
                         display='default'
                         onChange={onChange}
-                    />
-                )}
-                {/*<DatePicker*/}
-                {/*    style={{width: 200}}*/}
-                {/*    date={date}*/}
-                {/*    mode="date"*/}
-                {/*    placeholder="select date"*/}
-                {/*    format="YYYY-MM-DD"*/}
-                {/*    minDate="2016-05-01"*/}
-                {/*    maxDate="2016-06-01"*/}
-                {/*    confirmBtnText="Confirm"*/}
-                {/*    cancelBtnText="Cancel"*/}
-                {/*    customStyles={{*/}
-                {/*        dateIcon: {*/}
-                {/*            position: 'absolute',*/}
-                {/*            left: 0,*/}
-                {/*            top: 4,*/}
-                {/*            marginLeft: 0*/}
-                {/*        },*/}
-                {/*        dateInput: {*/}
-                {/*            marginLeft: 36*/}
-                {/*        }*/}
-                {/*        // ... You can check the source to find the other keys.*/}
-                {/*    }}*/}
-                {/*    onDateChange={(date) => setDate(date)}*/}
-                {/*/>*/}
+                    />}
                 <Button
                     onPress={onPressRegister}
                     title="Register"
@@ -249,6 +250,7 @@ export const RegisterScreen = ({navigation}) => {
                         <Text style={{color: '#AD40AF', fontWeight: '700'}}> Login</Text>
                     </TouchableOpacity>
                 </View>
+                {error && <Text style={{marginTop:10, color: "red", fontWeight: "bold", fontSize: 15}}>{errorText}</Text>}
             </View>
         </SafeAreaView>
     );
