@@ -1,12 +1,16 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import {Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import {useSelector} from "react-redux";
+import {getUser, selectUser} from "../features/userSlice";
+import {store} from "../store";
 
-const User = ({ user }) => {
+const User = ({ username }) => {
+    const user = useSelector(selectUser);
     return (
         <View style={styles.headerContainer}>
             <Image source={require('../assets/userIcn.png')} style={styles.profilePicture} />
-            <Text style={styles.name}>{`Pe'er`}</Text>
+            <Text style={styles.name}>{user.name}</Text>
         </View>
     );
 };
@@ -17,18 +21,18 @@ const CourtsLogo = () =>{
     )
 
 }
-const HeaderButtons = () => {
+const HeaderButtons = ({navigation}) => {
     return (
         <View style={{flex :1, flexDirection:"row", alignItems: "flex-end"}} >
             <TouchableOpacity
                 style={{ borderRadius:5, paddingVertical:10, paddingHorizontal:2, flexDirection: 'row', backgroundColor: 'transparent' }}
-                // onPress={() => )
+                 onPress={() => navigation.navigation.navigate("UserSettings")}
             >
                 <Ionicons name="settings-sharp" size={24} color="black" />
             </TouchableOpacity>
              <TouchableOpacity
                 style={{ borderRadius:5, paddingVertical:10, paddingHorizontal:2, flexDirection: 'row', backgroundColor: 'transparent' }}
-                // onPress={() => )
+                onPress={() =>  store.dispatch(getUser({ userID: null,name: null }))}
             >
                  <MaterialCommunityIcons name="logout" size={24} color="black" />
             </TouchableOpacity>

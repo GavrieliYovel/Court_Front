@@ -23,9 +23,9 @@ const TeamStack = () => {
     return (
         <Stack.Navigator initialRouteName={"PlayerTeams"}>
             <Stack.Screen name={"PlayerTeams"} component={TeamsListScreen} options={headerOptions("My Teams")}/>
-            {/*    {(props) => <TeamsListScreen {...props} />}*/}
-            {/*</Stack.Screen>*/}
-            <Stack.Screen name={"OtherTeams"} component={TeamsJoinScreen}/>
+            <Stack.Screen name={"OtherTeams"}  options={headerOptions("Join Team")}>
+                {props => <TeamsJoinScreen {...props}/>}
+            </Stack.Screen>
             <Stack.Screen name={"TeamForm"} options={({route}) =>headerOptions(route.params.title)}>
                 {(props) => <TeamForm {...props} />}
             </Stack.Screen>

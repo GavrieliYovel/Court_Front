@@ -1,20 +1,23 @@
-import React, { Component } from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import { RadioButton } from 'react-native-paper';
-import RNPickerSelect from 'react-native-picker-select';
-
-
+import { Picker } from '@react-native-community/picker';
 import {
-    SafeAreaView,
     View,
     Text,
-    TextInput,
     TouchableOpacity,
-    Image,
     StyleSheet,
-    Button
+    FlatList,
+    Platform
 } from 'react-native';
-import DatePicker from 'react-native-datepicker';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import {ThemedButton} from "react-native-really-awesome-button";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from "moment";
+import {useSelector} from "react-redux";
+import {selectUser} from "../features/userSlice";
+
+
+
+
 const styles = StyleSheet.create({
     tinyLogo: {
         width: 300,
@@ -47,13 +50,75 @@ const styles = StyleSheet.create({
         width: 230,
         fontSize: 16,
         color : "#000"
+    },
+    modal: {
+        margin: 20,
+        backgroundColor: 'white',
+        height: 50,
+        width: 50,
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        }
     }
 });
-export const GameForm = () => {
-    const [gameScope, onChangeGameScope] = React.useState('Football');
+
+const labelStyle = StyleSheet.create({
+    fontWeight: "bold",
+    color: "black"
+})
+
+export const GameForm = ({navigation, route}) => {
+    const courtID = route.params.courtID;
+    const scope = route.params.scope;
+    const user = useSelector(selectUser);
+    const [gameScope, onChangeGameScope] = React.useState('');
     const [gameDuration, onChangeGameDuration] = React.useState('15');
-    const [date, setDate] = React.useState(new Date());
+    const [selectedTeam, onChangeTeams] = React.useState('');
+    const [date, setDate] = useState(new Date());
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+    const [text, setText] = useState('Date');
+    const [error, setError] = useState(false);
+    const [errorText, setErrorText] = useState('');
+
+    const onChange= (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShow(Platform.OS === 'ios');
+        setDate(currentDate);
+
+        let tempDate = new Date(currentDate);
+        let fDate = moment(tempDate).format("DD-MM-YYYY");
+        let fTime = moment(tempDate).format("HH:mm A")
+        setText(fDate + ' ' + fTime);
+    }
+    const showMode = (currentMode) => {
+        setShow(true);
+        setMode(currentMode);
+    }
+
+
     const OnPressSave = () => {
+        if(gameScope === '') {
+            setErrorText('Choose Scope');
+            setError(true);
+            return;
+        }
+        if(selectedTeam === '') {
+            setErrorText('Choose Team');
+            setError(true);
+            return;
+        }
+        if(text === 'Date') {
+            setErrorText('Choose Date');
+            setError(true);
+            return;
+        }
+
         fetch('https://courts.onrender.com/games/new', {
             method: 'POST',
             headers: {
@@ -61,157 +126,177 @@ export const GameForm = () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                creator: user.userID,
+                court: courtID,
                 scope: gameScope,
-                date: date,
-                duration: gameDuration
+                gameDate: date,
+                endDate: moment(date).add(parseInt(gameDuration), 'minutes'),
+                team: selectedTeam
             })
         })
             .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(e => console.log('Could not save the game', e))
+            .then(data => {
+                console.log(data);
+                navigation.goBack()
+            })
+            .catch(e => {
+                setErrorText('There is already a game at this time!');
+                setError(true);
+            })
     }
-    return (
-        <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
-            <View style={{paddingHorizontal: 25}}>
-                <Text
-                    style={{
-                        fontSize: 28,
-                        fontWeight: '500',
-                        color: '#333',
-                        marginBottom: 30,
-                        marginTop: 30,
-                        alignItems: 'center',
-                    }}>
-                    Let's create a game!
-                </Text>
+    const [teams, setTeams] = React.useState([]);
+    useEffect(()=>{
+        fetch(`https://courts.onrender.com/teams/${user.userID}`)
+            .then(response => response.json())
+            .then(data => {
+                setTeams(data)
+            })
+            .catch(error => console.error('Error:', error));
+    },[])
 
-                <Text
-                    style={{
-                        fontSize: 12,
-                        fontWeight: '350',
-                        color: '#333',
-                        marginBottom: 5,
-                        marginTop: 5,
-                    }}>
-                    Football
-                </Text>
-                    <RadioButton
-                        value="Football"
-                        status={ gameScope === 'Football' ? 'checked' : 'unchecked' }
-                        onPress={() => onChangeGameScope('Football')}
-                    />
-                <Text
-                    style={{
-                        fontSize: 12,
-                        fontWeight: '500',
-                        color: '#333',
-                        marginBottom: 30,
-                        marginTop: 30,
-                    }}>
-                    Basketball
-                </Text>
-                    <RadioButton
-                        value="Basketball"
-                        status={ gameScope === 'Basketball' ? 'checked' : 'unchecked' }
-                        onPress={() => onChangeGameScope('Basketball')}
-                    />
-
-                <View>
-                    <SafeAreaView style={styles.container}>
-                    {/*<Ionicons*/}
-                    {/*    name="ios-lock-closed-outline"*/}
-                    {/*    size={20}*/}
-                    {/*    // color="#666"*/}
-                    {/*    style={{marginRight: 5}}*/}
-                    {/*/>*/}
-                        <Text
-                            style={{
-                                fontSize: 12,
-                                fontWeight: '500',
-                                color: '#333',
-                                marginBottom: 30,
-                                marginTop: 30,
-                            }}>
-                            Select a date
-                        </Text>
-                    <DatePicker
-                            style={{width: 200}}
-                            date={date}
-                            mode="datetime"
-                            placeholder="Select date"
-                            format="YYYY-MM-DD HH:mm"
-                            confirmBtnText="Confirm"
-                            cancelBtnText="Cancel"
-                            customStyles={{
-                                dateIcon: {
-                                    position: 'absolute',
-                                    left: 0,
-                                    top: 4,
-                                    marginLeft: 0
-                                },
-                                dateInput: {
-                                    marginLeft: 36
-                                }
-                            }}
-                            onDateChange={(date) => {setDate(date)}}
-                    />
-                        <Text
-                            style={{
-                                fontSize: 16,
-                                fontWeight: '500',
-                                color: '#333',
-                                marginBottom: 10,
-                                marginTop: 30,
-                            }}>
-                            Duration of the game?
-                        </Text>
-                        <RNPickerSelect
-                            placeholder={"Duration of the game"}
-                            style={{fontSize: 16,
-                                marginTop: 20,
-                                paddingVertical: 12,
-                                paddingHorizontal: 10,
-                                borderWidth: 1,
-                                borderColor: 'gray',
-                                borderRadius: 4,
-                                color: 'black',
-                                paddingRight: 30}}
-                            itemKey={gameDuration}
-                            onValueChange={(value) => onChangeGameDuration(value)}
-                            items={[
-                                {label:'15', value:"key0"},
-                                {label:"30", value:"key1"},
-                                {label:"45", value:"key2"},
-                                {label:"60", value:"key3"},
-                                {label:"75",value: "key4"},
-                                {label:"90", value:"key5"},
-                                {label:"105", value:"key6"},
-                                {label:"120", value:"key7"},
-                            ]}
-                            customStyles={{
-                                dateIcon: {
-                                    position: 'absolute',
-                                    left: 0,
-                                    top: 4,
-                                    marginLeft: 0
-                                },
-                                dateInput: {
-                                    marginLeft: 36
-                                }
-                            }}
-                        />
-                    </SafeAreaView>
+    const renderItem = ({item}) => {
+        let names=[];
+        item.players.forEach( (player)=> {
+            names.push(player.name);
+        })
+        return (
+            <View style={{display:'flex', flexDirection:'row', width:'100%', alignItems:"center"}}>
+                <View style={{width:'85%'}}>
+                    <Text style={{fontWeight: 'bold', marginTop:10}}>{item.name} </Text>
+                    <Text style={{marginTop:10}}>Team's players: {names+ ' '}</Text>
                 </View>
-                <Button
-                    style={{ position: 'absolute',
-                        bottom: 0}}
-                    // onPress={OnPressSave}
-                    title="Save"
-                    color="steelblue"
-                    accessibilityLabel="Save"
+                <RadioButton
+                    style={{width:20}}
+                    value={item._id}
+                    status={ selectedTeam === item._id ? 'checked' : 'unchecked' }
+                    onPress={() => onChangeTeams(item._id)}
                 />
             </View>
-        </SafeAreaView>
+        );
+    }
+
+    return (
+            <View style={{
+                display:"flex",
+                flex: 1,
+                marginHorizontal: 20,
+                marginTop: 10
+            }}>
+                <View style={{
+                    marginVertical: 10,
+                    flexDirection: "row",
+                    justifyContent:"space-between",
+                    alignItems: "center"
+                }}>
+                    <Text
+                        style={{
+                            fontSize: 28,
+                            fontWeight: '500',
+                            color: '#333',
+                        }}>
+                        Let's create a game!
+                    </Text>
+                    <ThemedButton raiseLevel={1} height={30} width={45}  onPress={navigation.goBack} name="bruce" type="primary" size="small">X</ThemedButton>
+                </View>
+                <View>
+                    <Text style={labelStyle} marginBottom={5}>Select game's scope:</Text>
+                    <View style={{display: 'flex',flexDirection: 'row'}}>
+                        <Text style={{color: "black", marginTop:10, width:100}}>Football</Text>
+                        {scope.includes("Football") ?
+                        <RadioButton
+                            style={{width: 10}}
+                            value="Football"
+                            status={ gameScope === 'Football' ? 'checked' : 'unchecked' }
+                            onPress={() => onChangeGameScope('Football')}
+                        /> :
+                            <RadioButton
+                                style={{width: 10, color: "gray"}}
+                                value="Football"
+                                status={ gameScope === 'Football' ? 'checked' : 'unchecked' }
+                                onPress={() => onChangeGameScope('Football')}
+                                disabled={"disable"}
+                            />
+                        }
+                    </View>
+                    <View style={{display: 'flex',flexDirection: 'row'}}>
+                        <Text style={{color: "black", marginTop:10, width:100}}>Basketball</Text>
+                        {scope.includes("Basketball") ?
+                        <RadioButton
+                            style={{ width: 10}}
+                            value="Basketball"
+                            status={ gameScope === 'Basketball' ? 'checked' : 'unchecked' }
+                            onPress={() => onChangeGameScope('Basketball')}
+                        />:
+                        <RadioButton
+                            style={{ width: 10, color: "gray"}}
+                            value="Basketball"
+                            status={ gameScope === 'Basketball' ? 'checked' : 'unchecked' }
+                            onPress={() => onChangeGameScope('Basketball')}
+                            disabled={"disable"}
+                        />
+                        }
+                    </View>
+                </View>
+                <View style={{display: 'flex',flexDirection: 'row', marginTop:10, alignItems: "center"}}>
+                    <Text style={labelStyle} width={100}marginRight={10} marginLeft={11}>Select game's date:</Text>
+                    <Text> {text}</Text>
+                </View>
+                <View style={{display: 'flex',flexDirection: 'row', marginTop:10, alignItems: "center"}}>
+                    <TouchableOpacity style={{borderRadius: 10, borderWidth:1, marginRight:5}} onPress={() => showMode('date')}>
+                        <Text style={{padding:5}}>
+                            Select Date
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{borderRadius: 10, borderWidth:1}} onPress={() => showMode('time')}>
+                        <Text style={{padding:5}}>
+                            Select Time
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+                {show && (
+                    <DateTimePicker
+                        testID='dateTimePicker'
+                        value={date}
+                        mode={mode}
+                        is24Hour={true}
+                        display='default'
+                        onChange={onChange}
+                    />
+                )}
+                <View style={{display: 'flex',flexDirection: 'row', width:'100%',marginTop:10, marginBottom:10, alignItems: "center"}}>
+                    <Text style={labelStyle} marginBottom={5} marginRight={10}>Select game's duration: (in minutes)</Text>
+                    <Picker
+                        selectedValue={gameDuration}
+                        onValueChange={(itemValue) => onChangeGameDuration(itemValue)}
+                        style={{width:100}}
+                        itemStyle={{ width:50, fontSize:10}}
+                    >
+                        <Picker.Item key="15" label="15" value="15" />
+                        <Picker.Item key="30" label="30" value="30" />
+                        <Picker.Item key="45" label="45" value="45" />
+                        <Picker.Item key="60" label="60" value="60" />
+                        <Picker.Item key="75" label="75" value="75" />
+                        <Picker.Item key="90" label="90" value="90" />
+                        <Picker.Item key="105" label="105" value="105" />
+                        <Picker.Item key="120" label="120" value="120" />
+                    </Picker>
+                </View>
+                <View style={{width:'100%'}}>
+                    <Text style={labelStyle} marginRight={10}>Select game's team:</Text>
+                    <FlatList
+                        style={{marginLeft:10, width:'100%'}}
+                        data={teams}
+                        renderItem={renderItem}
+                        keyExtractor={item => item._id?.toString()}
+                    />
+                </View>
+                <ThemedButton style={{marginHorizontal: 70, marginVertical: 10}} stretch={false} name={"bruce"}
+                              type="primary" size={"large"} onPress={OnPressSave}>Submit</ThemedButton>
+
+                {error && <Text style={{color: "red", fontWeight: "bold", fontSize: 15}}>{errorText}</Text>}
+
+            </View>
+
     )
 };
 
